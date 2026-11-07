@@ -4,6 +4,7 @@ const data=root.VISION_KNOWLEDGE;
 data.sources.depth={name:'Basler · 深度、置信度与误差',url:'https://docs.baslerweb.com/stereovisard/rc_visard/en/stereo_general'};
 data.sources.invalid={name:'Basler · 无效深度数据',url:'https://docs.baslerweb.com/scan-3d-invalid-data-value'};
 data.sources.exposure={name:'Basler · 曝光时间',url:'https://docs.baslerweb.com/exposure-time'};
+data.sources.codeValidation={name:'Cognex · 读码数据校验',url:'https://docs.cognex.com/dmst_2510/web/EN/WebUI/Content/FlexID/Topics/External_Help/application-details-data-validation.htm'};
 function add(id,cat,title,desc,tags,parts,refs){data.articles.push({id,cat,title,desc,tags,sections:parts.map(p=>({title:p[0],text:p[1],points:p[2]||[]})),refs})}
 add('camera-sampling','camera','传感器尺寸、像素尺寸与分辨率','传感器、镜头和工件视野共同决定物面采样。',['传感器','像元','选型'],[
 ['三个不同的尺寸','像素数量描述图像有多少采样点；像元尺寸是传感器上单个像素的物理尺寸；传感器有效尺寸则与像素数量和像元尺寸有关。'],
@@ -45,6 +46,10 @@ add('calib-validation','calibration','标定结果如何做独立验证','拟合
 ['独立点','不要只检查参与求解的点。用未参与标定的点或姿态，覆盖图像中心、边缘和实际工作区域。'],
 ['记录条件','记录坐标系、单位、工作高度、镜头、曝光、机械臂姿态、方向以及数据采集时间；区分图像定位误差和机械手到位误差。'],
 ['最终验收','依据实际公差统计偏差及重复性，使用具有合适准确度的参考方式；温度、安装、夹持和工件批次也可能带来变化。']],['calib','optics']);
+add('2d-code-check','vision2d','读码与数据校验','先确认是否读到，再按工艺要求核对内容。',['读码','条码','校验'],[
+['拍摄和识别','让码区在视野内清晰、对比充分，并核对码制、方向和触发时序；可读性应使用真实样件验证。'],
+['读码与校验是两步','读到文字只代表识别器输出了内容；还要根据工艺要求检查字符串、格式、产品或订单是否匹配。'],
+['失败状态','没有读到、读到但内容不匹配和校验通过应分别处理；不同设备的输出和失败策略以实际配置为准。']],['codeValidation','exposure']);
 add('app-interface','application','视觉与机器人接口要约定什么','同一组 XYR，双方理解不同就可能造成稳定偏差。',['接口','XYR','机器人'],[
 ['传输什么','明确传的是产品参考点、机器人工具目标，还是相对基准的偏移；还要说明数值所属坐标系和单位。'],
 ['何时有效','为图像、机器人位姿与结果建立对应关系，记录曝光时间或采样序号；识别失败、超时和异常结果必须有明确状态。'],
