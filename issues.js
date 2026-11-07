@@ -9,5 +9,28 @@ const cases=[
  ['图像不更新或偶发丢帧','采集','触发、采集节拍、网络带宽或缓存可能异常。',['确认相机触发模式及触发信号。','检查图像编号、时间和采集速率。','核对网络、带宽及程序处理耗时。'],'#category/camera','相机与采集'],
  ['视觉输出正常，机器人却没有动作','通信','数据格式、握手、超时或控制器状态可能不一致。',['先核对双方连接和发送接收日志。','逐项核对字段顺序、单位、结束符和状态码。','与设备工程师检查握手、互锁和超时处理。'],'#category/application','应用与排查']
 ];
-function mount(el){el.innerHTML=`<div class="wrap"><div class="page-head"><div class="eyebrow">TROUBLESHOOTING</div><h1>常见问题与排查</h1><p>从现场现象出发，逐步检查成像、定位、测量和通信。</p><label>搜索现象 <input type="search" id="issue-search" placeholder="例如：过曝、抓取偏差、角度"></label></div><div id="issue-list" class="issues"></div><p class="notice">排查建议是检查起点，实际原因可能不止一个。涉及设备运动与联锁时，请按现场安全流程操作。</p></div>`;const list=el.querySelector('#issue-list');function render(){const q=el.querySelector('#issue-search').value.trim().toLowerCase();let a=cases.filter(c=>c.flat().join(' ').toLowerCase().includes(q));list.innerHTML=a.length?a.map(c=>`<details class="issue"><summary><span>${c[1]}</span><b>${c[0]}</b></summary><p><strong>可能原因：</strong>${c[2]}</p><strong>建议检查</strong><ol>${c[3].map(x=>`<li>${x}</li>`).join('')}</ol><a href="${c[4]}">${c[5]} →</a></details>`).join(''):'<p>没有找到对应现象，试试其他关键词。</p>'}el.querySelector('#issue-search').addEventListener('input',render);render()};root.VisionIssues={mount};
+function mount(el){
+ el.innerHTML=`<div class="wrap"><div class="page-head"><div class="eyebrow">TROUBLESHOOTING</div><h1>常见问题与排查</h1><p>从现场现象出发，逐步检查成像、定位、测量和通信。</p><label class="issue-search"><span>搜索现象</span><input type="search" id="issue-search" placeholder="例如：过曝、抓取偏差、角度"></label></div><p class="issues-count" role="status" aria-live="polite"></p><div id="issue-list" class="issues"></div><p class="notice">排查建议是检查起点，实际原因可能不止一个。涉及设备运动与联锁时，请按现场安全流程操作。</p></div>`;
+ const list=el.querySelector('#issue-list');
+ const count=el.querySelector('.issues-count');
+ const search=el.querySelector('#issue-search');
+ function card(c){
+  return `<details class="issue"><summary><span class="issue-tag">${c[1]}</span><b>${c[0]}</b><span class="issue-toggle" aria-hidden="true"></span></summary><div class="issue-body"><p><strong>可能原因：</strong>${c[2]}</p><strong>建议检查</strong><ol>${c[3].map(x=>`<li>${x}</li>`).join('')}</ol><a href="${c[4]}">${c[5]} →</a></div></details>`;
+ }
+ function render(){
+  const q=search.value.trim().toLowerCase();
+  const matches=cases.filter(c=>c.flat().join(' ').toLowerCase().includes(q));
+  count.textContent=matches.length?`共 ${matches.length} 个问题 · 点击卡片展开检查步骤`:'没有找到对应现象，试试其他关键词。';
+  list.classList.toggle('issues--single',matches.length<=1);
+  if(!matches.length){list.innerHTML='';return}
+  // 两列分别排布：展开一列时不会拉伸另一列的卡片。
+  const midpoint=Math.ceil(matches.length/2);
+  list.innerHTML=[matches.slice(0,midpoint),matches.slice(midpoint)]
+   .filter(group=>group.length)
+   .map(group=>`<div class="issue-column">${group.map(card).join('')}</div>`).join('');
+ }
+ search.addEventListener('input',render);
+ render();
+}
+root.VisionIssues={mount};
 })(window);
