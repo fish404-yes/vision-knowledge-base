@@ -1,0 +1,12 @@
+.footer-meta{text-align:right}
+.footer-meta p{margin:3px 0 0}
+.site-visits{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;color:var(--ink)}
+.site-visits-label{font-weight:700}
+.site-visits img{height:20px;width:auto;vertical-align:middle}
+.site-visits-status{color:var(--muted)}
+.footer-meta a{color:var(--teal);text-decoration:underline;text-underline-offset:2px}
+@media(max-width:760px){
+  .footer-meta{text-align:left}
+  .site-visits{justify-content:flex-start}
+  .footer-inner .site-visits-label,.footer-inner .site-visits-status:not([hidden]){display:inline}
+}
