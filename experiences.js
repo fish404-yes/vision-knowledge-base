@@ -7,6 +7,7 @@ const range=(key,label,min,max,unit)=>({key,label,min,max,unit});
 const catalogue=[
 {id:'view',title:'视野与像素密度',category:'相机与镜头',desc:'改变视野宽度和像素数，看工件覆盖与特征采样如何变化。',article:'camera-selection'},
 {id:'thinlens',title:'凸透镜成像与放大倍率',category:'镜头与成像',desc:'调整物距和焦距，观察光路、像距和成像方向。',article:'lens-fov'},
+{id:'lens-height',title:'工件高度与成像倍率',category:'镜头与成像',desc:'改变工件高度，比较普通镜头与理想物方远心镜头的成像宽度。',article:'telecentric'},
 {id:'shutter',title:'全局快门与滚动快门',category:'相机与采集',desc:'比较移动物体在不同时序下的形状差异。',article:'sensor-shutter'},
 {id:'lighting',title:'六种照明方式',category:'光源与照明',desc:'切换环形、条形、背光、低角度、同轴和穹顶光。',article:'light-selection'},
 {id:'lighting-guide',title:'按工件与特征试选光源',category:'光源与照明',desc:'选择表面和检测目标，比较照明建议与布置示意。',article:'light-selection'},
@@ -16,6 +17,7 @@ const catalogue=[
 {id:'3d-compare',title:'四种 3D 方法对比',category:'3D 视觉',desc:'比较双目、结构光、激光轮廓和 ToF 的原理与适用条件。',article:'3d-overview'},
 {id:'profile',title:'激光轮廓与高度',category:'3D 视觉',desc:'调整工件截面高度，观察一条模拟轮廓线。',article:'3d-laser'},
 {id:'frames',title:'像素与物理坐标',category:'标定与坐标',desc:'移动图像点，看简单平面标定如何映射到物理位置。',article:'calib-frames'},
+{id:'handeye-poses',title:'眼在手上：两次拍照与坐标',category:'标定与坐标',desc:'相机移动时，同一个 Mark 的像素如何配合各自拍照位姿映射到基座。',article:'calib-handeye'},
 {id:'placement',title:'上下相机贴合偏置',category:'应用与排查',desc:'改变产品在工具上的偏移和目标方向，反算工具位姿。',article:'app-alignment'}
 ];
 const byArticle={'camera-selection':'view','lens-fov':'view','sensor-shutter':'shutter','light-selection':'lighting','backlight':'lighting','coaxial-dome':'lighting','ring-bar':'lighting','2d-threshold':'threshold','2d-mark':'marks','3d-stereo':'stereo','3d-laser':'profile','calib-frames':'frames','calib-planar':'frames','app-alignment':'placement'};
@@ -102,6 +104,7 @@ throw new Error('Unknown demonstration');
 }
 function mount(target,id,options){
  if(id==='lighting-guide'||id==='3d-compare'){if(target&&root.VisionScenarioGuides)root.VisionScenarioGuides.mount(target,id);return}
+ if(id==='lens-height'||id==='handeye-poses'){if(target&&root.VisionSpatialGuides)root.VisionSpatialGuides.mount(target,id);return}
  const d=defs[id];if(!d||!target)return;const uid=++serial;const preset={backlight:'back','coaxial-dome':'coax','ring-bar':'ring'};const initial={...d.initial};if(id==='lighting'&&options&&preset[options.articleId])initial.mode=preset[options.articleId];let state={...initial};
  target.innerHTML=`<section class="experience" aria-labelledby="experience-title-${uid}"><div class="experience-head"><div><span class="experience-kicker">动手体验 · 互动示意</span><h2 id="experience-title-${uid}">${d.title}</h2><p>${d.summary}</p></div><button class="experience-reset" type="button">重置</button></div><div class="experience-layout"><div><div class="experience-figure" tabindex="0" role="region" aria-label="互动图示，小屏幕可左右滚动查看"></div><p class="experience-note">${d.note}</p></div><div class="experience-panel">${d.ranges.map(x=>`<label class="experience-range" for="exp-${uid}-${x.key}"><span>${x.label}<output data-output="${x.key}">${state[x.key]} ${x.unit}</output></span><input id="exp-${uid}-${x.key}" type="range" min="${x.min}" max="${x.max}" step="1" value="${state[x.key]}" data-range="${x.key}"></label>`).join('')}${d.choices?`<div class="experience-label">${d.choices.label}</div><div class="experience-buttons">${d.choices.items.map(i=>`<button type="button" data-choice="${d.choices.key}" data-value="${i[0]}" aria-pressed="${String(state[d.choices.key]===i[0])}">${i[1]}</button>`).join('')}</div>`:''}${d.toggles?`<div class="experience-buttons">${d.toggles.map(x=>`<button type="button" data-toggle="${x[0]}" aria-pressed="false">${x[1]}</button>`).join('')}</div>`:''}<div class="experience-result" aria-live="polite"></div></div></div></section>`;
  function update(){for(const r of d.ranges){const o=target.querySelector(`[data-output="${r.key}"]`);o.textContent=state[r.key]+(r.unit?' '+r.unit:'');const input=target.querySelector(`[data-range="${r.key}"]`);input.value=state[r.key]}target.querySelectorAll('[data-choice]').forEach(b=>b.setAttribute('aria-pressed',String(String(state[b.dataset.choice])===b.dataset.value)));target.querySelectorAll('[data-toggle]').forEach(b=>b.setAttribute('aria-pressed',String(!!state[b.dataset.toggle])));let result=show(id,state,uid);target.querySelector('.experience-figure').innerHTML=result.svg;target.querySelector('.experience-result').innerHTML=result.out}
