@@ -1,0 +1,11 @@
+(function(root){
+const types=[
+ ['定焦镜头','常见通用方案','焦距固定，但通常可以调焦；视野随工作距离和传感器尺寸变化。','定位、读码、一般外观检测。','先按视野与工作距离粗估焦距，再核对最近工作距离、像场、分辨能力与畸变。'],
+ ['远心镜头','适合关注测量稳定性','物方远心镜头可在指定范围内降低物距变化带来的倍率变化。','精密尺寸测量、需要减小透视误差的场景。','关注倍率、物方视野、工作距离、远心度与照明；远心不等于无需标定。'],
+ ['变焦镜头','视野可调整','焦距可在一定范围内调整；具体变焦和调焦方式依型号而定。','同一工位需要观察多种尺寸或切换视野。','确认变焦后清晰度、标定是否变化，检查机械空间、稳定性与成本。'],
+ ['微距／显微镜头','观察很小的细节','用于较高倍率的近距离成像；显微物镜通常需要配套筒镜等光学部件。','微小元件、细线、细小缺陷。','核对倍率、工作距离、景深、照明和是否需要筒镜；不要把倍率当焦距。'],
+ ['线扫镜头','配合线阵相机','针对线阵传感器及其成像要求设计；实际应用仍需相对运动逐行采集。','卷材、薄膜、连续运动物料表面检测。','核对线阵长度、像元尺寸、扫描速度、运动同步和照明均匀性。'],
+ ['大视场／广角镜头','空间受限时覆盖更宽范围','较短焦距通常有更宽视角，边缘畸变和透视影响需要评估。','空间有限的大范围定位、观察。','检查边缘清晰度、畸变、安装角度及标定效果；广角并非独立接口标准。']
+];
+function mount(target){if(!target)return;target.innerHTML=`<section class="lens-guide"><div class="eyebrow">LENS GUIDE</div><h2>工业镜头怎么区分、怎么选？</h2><p>先选适合任务的镜头类型，再根据视野、工作距离和相机规格筛选。点击类型查看区别。</p><div class="lens-types" role="group" aria-label="镜头类型">${types.map((t,i)=>`<button type="button" data-lens="${i}" aria-pressed="${i===0}">${t[0]}</button>`).join('')}</div><div class="lens-detail" aria-live="polite"></div><div class="lens-steps"><h3>选型顺序</h3><ol><li><b>明确任务：</b>定位、读码还是尺寸测量？最小特征和允许误差是多少？</li><li><b>确定空间：</b>写出视野宽高、工作距离、工件高度波动和安装余量。</li><li><b>匹配相机：</b>核对传感器有效尺寸、像元、接口和镜头成像圈。</li><li><b>筛选镜头：</b>定焦镜头参考上方焦距估算；远心及高倍率镜头按倍率、视野和工作距离核对规格。</li><li><b>样件验证：</b>在视野中心和边缘、最高最低工件高度检查清晰度、畸变、景深和实际结果。</li></ol><p>接口（如 C、CS、F、M12）是机械连接分类，不等于光学类型；还需确认法兰距、成像圈和适配性。</p><p>来源：<a href="https://www.edmundoptics.com/knowledge-center/application-notes/imaging/imaging-lens-selection-guide/">Edmund Optics 镜头类型</a> · <a href="https://www.baslerweb.com/en-us/learning/lens-selection/">Basler 镜头选型</a> · <a href="#category/lens">查看镜头知识目录 →</a></p></div></section>`;let buttons=target.querySelectorAll('[data-lens]');function select(i){let t=types[i];buttons.forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));target.querySelector('.lens-detail').innerHTML=`<div><small>镜头类型</small><h3>${t[0]}</h3><strong>${t[1]}</strong></div><div><p><b>成像特点：</b>${t[2]}</p><p><b>常见场景：</b>${t[3]}</p><p><b>选型重点：</b>${t[4]}</p></div>`}buttons.forEach(b=>b.addEventListener('click',()=>select(Number(b.dataset.lens))));select(0)}root.VisionLensGuide={mount};
+})(window);
