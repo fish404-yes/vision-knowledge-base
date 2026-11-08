@@ -69,6 +69,7 @@
   for(const control of [threshold,area,polarity,connectivity])control.addEventListener('input',schedule);
   const themeObserver=new MutationObserver(()=>{if(!source.isConnected){themeObserver.disconnect();return}schedule()});
   themeObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  window.addEventListener('hashchange',()=>themeObserver.disconnect(),{once:true});
   file.addEventListener('change',()=>{
    const selected=file.files&&file.files[0];if(!selected)return;
    if(!['image/png','image/jpeg','image/webp'].includes(selected.type)||selected.size>15*1024*1024){status('请选择不超过 15 MB 的 PNG、JPG 或 WebP 图片。',true);file.value='';return}
