@@ -14,6 +14,8 @@ const catalogue=[
 {id:'light-compare',title:'同一工件的光源成像对照',category:'光源与照明',desc:'切换环形光、低角度光和背光，比较金属板划痕和孔位的合成成像示意。',article:'light-selection'},
 {id:'threshold',title:'灰度与二值阈值',category:'2D 视觉',desc:'改变阈值，看同一组像素如何变成前景或背景。',article:'2d-threshold'},
 {id:'marks',title:'双 Mark 位置与方向',category:'2D 视觉',desc:'平移、旋转和交换 Mark，观察中点与方向角。',article:'2d-mark'},
+{id:'roi-coordinates',title:'ROI 范围与局部坐标',category:'2D 视觉',desc:'移动 ROI 和特征点，观察原图与局部坐标的换算。',article:'2d-roi'},
+{id:'edge-scan',title:'测量线找边：灰度、方向与阈值',category:'2D 视觉',desc:'改变灰度差、扫描方向和阈值，观察候选边缘。',article:'2d-features'},
 {id:'stereo',title:'双目视差与距离',category:'3D 视觉',desc:'改变基线与目标距离，观察理想双目视差变化。',article:'3d-stereo'},
 {id:'depth-cloud',title:'深度图到点云：遮挡与无效点',category:'3D 视觉',desc:'调整相机距离和视角，观察深度像素、点云、遮挡与模拟无效点。',article:'3d-pointcloud'},
 {id:'3d-compare',title:'四种 3D 方法对比',category:'3D 视觉',desc:'比较双目、结构光、激光轮廓和 ToF 的原理与适用条件。',article:'3d-overview'},
@@ -22,7 +24,7 @@ const catalogue=[
 {id:'handeye-poses',title:'眼在手上：两次拍照与坐标',category:'标定与坐标',desc:'相机移动时，同一个 Mark 的像素如何配合各自拍照位姿映射到基座。',article:'calib-handeye'},
 {id:'placement',title:'上下相机贴合偏置',category:'应用与排查',desc:'改变产品在工具上的偏移和目标方向，反算工具位姿。',article:'app-alignment'}
 ];
-const byArticle={'camera-selection':'view','lens-fov':'view','sensor-shutter':'shutter','light-selection':'lighting','backlight':'lighting','coaxial-dome':'lighting','ring-bar':'lighting','2d-threshold':'threshold','2d-mark':'marks','3d-stereo':'stereo','3d-pointcloud':'depth-cloud','3d-confidence':'depth-cloud','3d-laser':'profile','calib-frames':'frames','calib-planar':'frames','app-alignment':'placement'};
+const byArticle={'camera-selection':'view','lens-fov':'view','sensor-shutter':'shutter','light-selection':'lighting','backlight':'lighting','coaxial-dome':'lighting','ring-bar':'lighting','2d-threshold':'threshold','2d-mark':'marks','2d-roi':'roi-coordinates','2d-features':'edge-scan','2d-measure':'edge-scan','3d-stereo':'stereo','3d-pointcloud':'depth-cloud','3d-confidence':'depth-cloud','3d-laser':'profile','calib-frames':'frames','calib-planar':'frames','app-alignment':'placement'};
 const lightInfo={ring:{title:'环形光',what:'从镜头周围照明，可通过角度和工作距离调整表面特征的对比。',care:'反光工件可能出现高光或环形反射，需要实际试光。'},bar:{title:'条形光',what:'从侧面提供有方向的照明，可通过角度突出局部特征。',care:'光源位置、阴影和物体方向会影响结果。'},back:{title:'背光',what:'从工件背后照射，有助于显示轮廓、孔洞或间隙。',care:'通常不适合直接观察不透光工件的正面纹理；实际需留出背面空间。'},dark:{title:'低角度光',what:'从较低角度照射，尝试突出边缘、纹理或刻痕。',care:'表面材质和缺陷方向会改变效果，需用真实样件试光。'},coax:{title:'同轴光',what:'沿相机观察方向照明，可尝试观察某些平整反光面。',care:'曲面、透明材质和局部倾斜可能得到不同结果。'},dome:{title:'穹顶漫射光',what:'从多个方向形成较柔和的照明，可尝试改善部分反光。',care:'有效距离、开口与实际安装空间应按光源规格验证。'}};
 const grey=Array.from({length:48},(_,i)=>{const r=Math.floor(i/8),c=i%8;return c>=2&&c<=5&&r>=1&&r<=4?160+(r*19+c*11)%65:35+(r*13+c*7)%75});
 const defs={
@@ -105,6 +107,7 @@ if(type==='placement'){
 throw new Error('Unknown demonstration');
 }
 function mount(target,id,options){
+ if(id==='roi-coordinates'||id==='edge-scan'){if(target&&root.Vision2DBasicDemos)root.Vision2DBasicDemos.mount(target,id);return}
  if(id==='depth-cloud'){if(target&&root.VisionDepthCloud)root.VisionDepthCloud.mount(target);return}
  if(id==='light-compare'){if(target&&root.VisionLightCompare)root.VisionLightCompare.mount(target);return}
  if(id==='lighting-guide'||id==='3d-compare'){if(target&&root.VisionScenarioGuides)root.VisionScenarioGuides.mount(target,id);return}

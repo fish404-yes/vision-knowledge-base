@@ -5,7 +5,7 @@ const projects=[
 {id:'single',title:'单相机两次拍摄双 Mark',label:'眼在手上',desc:'相机随机械手移动，分别拍两点，再换算到基坐标系。',steps:['基准产品','拍 Mark 1','拍 Mark 2','统一坐标','计算偏差','机器人补偿'],color:'mint'},
 {id:'dual',title:'双相机同时定位双 Mark',label:'双固定相机',desc:'两台相机各用自己的映射，将各自的点统一到物理坐标。',steps:['建立基准','相机 1','相机 2','统一坐标','计算偏差','机器人补偿'],color:'blue'},
 {id:'placement',title:'上下相机对位贴合',label:'取料与贴合',desc:'分别处理来料、取后偏差与托盘姿态，计算工具目标。',steps:['拍来料','拍取后产品','拍托盘','计算放置'],color:'amber'},
-{id:'measure',title:'二维尺寸与 ROI 测量',label:'图像测量',desc:'从图像边缘到像素距离，再转换为毫米并比较公差。',steps:['模拟图像','查看 ROI','提取边缘','换算毫米','比较公差'],color:'purple'}
+{id:'measure',title:'二维尺寸与 ROI 测量',label:'图像测量',desc:'从图像边缘到像素距离，再转换为毫米并比较公差。',links:['demo:roi-coordinates','demo:edge-scan'],steps:['模拟图像','查看 ROI','提取边缘','换算毫米','比较公差'],color:'purple'}
 ];
 const fmt=n=>Math.abs(n)<0.0005?'0.0':Number(n).toFixed(1);
 const pt=p=>`(${fmt(p.x)}, ${fmt(p.y)})`;

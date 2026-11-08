@@ -3,7 +3,7 @@
  const api=root.VISION_PROJECTS,C=root.VisionFieldCaseModels,L=root.VisionImageLabModel,oldMount=api.mount;
  const extra=[
   {id:'calibration-nine',title:'九点平面标定与独立验证',label:'二维标定',desc:'用九组模拟对应点拟合平面仿射映射，再用未参与拟合的点检查偏差。',steps:['采集点对','拟合映射','独立点检查','换算目标']},
-  {id:'blob-regions',title:'Blob 连通域与面积筛选',label:'图像处理',desc:'在合成灰度图中依次设置 ROI、阈值、连通方式与面积筛选。',steps:['查看灰度','设置 ROI','阈值分割','连通域','面积筛选']}
+  {id:'blob-regions',title:'Blob 连通域与面积筛选',label:'图像处理',desc:'在合成灰度图中依次设置 ROI、阈值、连通方式与面积筛选。',links:['demo:roi-coordinates'],steps:['查看灰度','设置 ROI','阈值分割','连通域','面积筛选']}
  ];
  api.projects.push(...extra);
  const f=(n,d=2)=>Number(n).toFixed(d),point=p=>`(${f(p.x)}, ${f(p.y)})`;

@@ -3,7 +3,7 @@
  const api=root.VISION_PROJECTS,T=root.VisionTemplateDemo,C=root.VisionCircleDemo,oldMount=api.mount;
  const items=[
   {id:'template-localize',title:'模板匹配定位：从图像到坐标',label:'匹配定位',desc:'选择模板、搜索范围与角度，观察相关分数和示例平面坐标。',links:['article:2d-match','issue:matching'],steps:['选择模板','限定范围','匹配输出','物理转换']},
-  {id:'circle-calipers',title:'孔距测量：多测量线与圆拟合',label:'尺寸测量',desc:'在合成图像上找孔边、拟合两个圆，再计算圆心间距。',links:['article:2d-measure','case:hole-pitch','tool:image-lab'],steps:['查看工件','布置测量线','采样找边','拟合圆心','计算孔距']}
+  {id:'circle-calipers',title:'孔距测量：多测量线与圆拟合',label:'尺寸测量',desc:'在合成图像上找孔边、拟合两个圆，再计算圆心间距。',links:['article:2d-measure','case:hole-pitch','tool:image-lab','demo:edge-scan'],steps:['查看工件','布置测量线','采样找边','拟合圆心','计算孔距']}
  ];
  api.projects.push(...items);
  const f=(n,d=1)=>{const x=Math.abs(n)<1e-9?0:n;return Number(x).toFixed(d)};
