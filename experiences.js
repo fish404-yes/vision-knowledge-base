@@ -11,6 +11,7 @@ const catalogue=[
 {id:'shutter',title:'全局快门与滚动快门',category:'相机与采集',desc:'比较移动物体在不同时序下的形状差异。',article:'sensor-shutter'},
 {id:'lighting',title:'六种照明方式',category:'光源与照明',desc:'切换环形、条形、背光、低角度、同轴和穹顶光。',article:'light-selection'},
 {id:'lighting-guide',title:'按工件与特征试选光源',category:'光源与照明',desc:'选择表面和检测目标，比较照明建议与布置示意。',article:'light-selection'},
+{id:'light-compare',title:'同一工件的光源成像对照',category:'光源与照明',desc:'切换环形光、低角度光和背光，比较金属板划痕和孔位的合成成像示意。',article:'light-selection'},
 {id:'threshold',title:'灰度与二值阈值',category:'2D 视觉',desc:'改变阈值，看同一组像素如何变成前景或背景。',article:'2d-threshold'},
 {id:'marks',title:'双 Mark 位置与方向',category:'2D 视觉',desc:'平移、旋转和交换 Mark，观察中点与方向角。',article:'2d-mark'},
 {id:'stereo',title:'双目视差与距离',category:'3D 视觉',desc:'改变基线与目标距离，观察理想双目视差变化。',article:'3d-stereo'},
@@ -103,6 +104,7 @@ if(type==='placement'){
 throw new Error('Unknown demonstration');
 }
 function mount(target,id,options){
+ if(id==='light-compare'){if(target&&root.VisionLightCompare)root.VisionLightCompare.mount(target);return}
  if(id==='lighting-guide'||id==='3d-compare'){if(target&&root.VisionScenarioGuides)root.VisionScenarioGuides.mount(target,id);return}
  if(id==='lens-height'||id==='handeye-poses'){if(target&&root.VisionSpatialGuides)root.VisionSpatialGuides.mount(target,id);return}
  const d=defs[id];if(!d||!target)return;const uid=++serial;const preset={backlight:'back','coaxial-dome':'coax','ring-bar':'ring'};const initial={...d.initial};if(id==='lighting'&&options&&preset[options.articleId])initial.mode=preset[options.articleId];let state={...initial};

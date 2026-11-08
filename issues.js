@@ -10,7 +10,7 @@ function mount(el,initialQuery){
  '<p class="notice">观察线索用于缩小排查范围，不代表已确认故障。涉及设备运动和联锁时，请按现场安全流程操作。</p>'+
  '<p class="issue-references">参考资料：<a href="https://docs.cognex.com/isvs_2610/web/EN/InSight_Sheet/Content/Topics/HowTo/VGR/VGR-acq-and-placement.htm">Cognex 图像采集</a> · <a href="https://docs.baslerweb.com/triggered-image-acquisition">Basler 触发采集</a> · <a href="https://www.universal-robots.com/manuals/EN/HTML/SW5_19/Content/prod-usr-man/software/PolyScope/content/installation_g5/installation_TCP_configuration_en.htm">Universal Robots TCP</a></p></div>';
  const search=el.querySelector('#issue-search'),categoryBox=el.querySelector('.issue-categories'),list=el.querySelector('#issue-list'),detail=el.querySelector('#issue-detail'),count=el.querySelector('.issues-count');
- const contentIndex=root.VisionSiteSearch.build(root.VISION_KNOWLEDGE,root.VISION_PROJECTS.projects,root.VISION_EXPERIENCES.catalogue,root.VisionIssues.catalogue);
+ const contentIndex=root.VisionSiteSearch.build(root.VISION_KNOWLEDGE,root.VISION_PROJECTS.projects,root.VISION_EXPERIENCES.catalogue,root.VisionIssues.catalogue,root.VisionPracticalCases.cases);
  const state={category:'all',id:null,step:0,visible:[]};
  search.value=typeof initialQuery==='string'?initialQuery:'';
  function syncQuery(){const q=search.value.trim();try{root.history.replaceState(null,'',q?'#issues?q='+encodeURIComponent(q):'#issues')}catch(e){}}
