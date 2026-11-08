@@ -33,5 +33,5 @@ function mount(el,initialQuery=''){
  search.addEventListener('input',render);
  render();
 }
-root.VisionIssues={mount};
+root.VisionIssues={mount,catalogue:cases.map(c=>({title:c[0],category:c[1],desc:c[2],steps:c[3]}))};
 })(window);

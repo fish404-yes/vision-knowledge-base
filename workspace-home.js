@@ -13,7 +13,7 @@
   target.innerHTML=`<div class="wrap home-workspace">
    <section class="home-heading"><div><div class="home-kicker">VISION WORKSPACE</div><h1>视觉知识工作台</h1><p>把成像、定位与应用中的问题，放到同一个地方查找。</p></div><span class="home-heading-badge">✳　查阅与实践</span></section>
    <form class="home-search" role="search" aria-label="首页全站搜索"><label for="home-query" aria-label="搜索知识点"><span aria-hidden="true">⌕</span></label><input id="home-query" type="search" placeholder="搜索相机、镜头、光源、标定…"><button type="submit">查找</button></form>
-   <div class="home-quick"><span>常用入口</span><a href="#article/camera-selection">相机选型 ↗</a><a href="#article/lens-fov">镜头焦距 ↗</a><a href="#project/single">双 Mark ↗</a><a href="#tools">视野估算 ↗</a></div>
+   <div class="home-quick"><span>常用入口</span><a href="#article/camera-selection">相机选型 ↗</a><a href="#article/lens-fov">镜头焦距 ↗</a><a href="#project/single">双 Mark ↗</a><a href="#image-lab">图像实验 ↗</a><a href="#tools">视野估算 ↗</a></div>
    <div class="home-dashboard"><div class="home-primary">
     <section class="home-panel home-categories"><div class="home-panel-head"><div><span>KNOWLEDGE INDEX</span><h2>按主题查找</h2></div><a href="#browse">全部知识 ↗</a></div><div class="home-category-grid">${categories}</div><div class="home-panel-footer">${data.categories.length} 个知识主题 · ${data.articles.length} 篇知识点</div></section>
     <section class="home-panel home-project"><div class="home-panel-head"><div><span>PROJECT CASES</span><h2>从项目理解定位</h2></div><a href="#projects">全部案例 ↗</a></div><a class="home-project-feature" href="#project/single"><span class="home-project-art">${markArt()}</span><span class="home-project-copy"><small>2D 定位 / 案例</small><strong>${esc(project.title)}</strong><span>从拍照位姿、图像点到基座坐标，按步骤查看定位过程。</span><b>进入案例　→</b></span></a></section>
@@ -23,6 +23,7 @@
     <a class="home-tool-card" href="#tools"><span class="home-tool-top">QUICK TOOLS ${icon('target')}</span><strong>相机与镜头<br>选型估算</strong><span>把目标尺寸与工作条件代入，得到初步参考。</span><b>打开估算工具 ↗</b></a>
     <section class="home-panel home-issues"><div class="home-panel-head"><div><span>TROUBLESHOOTING</span><h2>常见问题</h2></div><a href="#issues">全部 ↗</a></div><a href="${issueLink('图像模糊')}"><i>01</i><span><strong>图像模糊或边缘不清</strong><small>对焦 · 曝光 · 景深</small></span><b>↗</b></a><a href="${issueLink('双 Mark 角度跳变')}"><i>02</i><span><strong>双 Mark 角度跳变</strong><small>身份 · 顺序 · 坐标</small></span><b>↗</b></a><a href="${issueLink('产品转得越多')}"><i>03</i><span><strong>旋转后抓取偏差增大</strong><small>TCP · 示教 · 补偿</small></span><b>↗</b></a></section>
     <a class="home-interactive-card" href="#interactive"><strong>${demos.catalogue.length}</strong><span>个互动图解<small>把坐标和成像动起来</small></span><b>↗</b></a>
+    <a class="home-interactive-card" href="#image-lab"><strong aria-hidden="true">▧</strong><span>图像实验区<small>本地图片 · ROI · Blob</small></span><b>↗</b></a>
    </aside></div>
   </div>`;
   target.querySelector('.home-search').addEventListener('submit',event=>{event.preventDefault();goSearch(target.querySelector('#home-query').value)});
