@@ -14,7 +14,7 @@ const catalogue=[
 {id:'light-compare',title:'同一工件的光源成像对照',category:'光源与照明',desc:'切换环形光、低角度光和背光，比较金属板划痕和孔位的合成成像示意。',article:'light-selection'},
 {id:'threshold',title:'灰度与二值阈值',category:'2D 视觉',desc:'改变阈值，看同一组像素如何变成前景或背景。',article:'2d-threshold'},
 {id:'marks',title:'双 Mark 位置与方向',category:'2D 视觉',desc:'平移、旋转和交换 Mark，观察中点与方向角。',article:'2d-mark'},
-{id:'roi-coordinates',title:'ROI 范围与局部坐标',category:'2D 视觉',desc:'移动 ROI 和特征点，观察原图与局部坐标的换算。',article:'2d-roi'},
+{id:'roi-coordinates',title:'ROI 范围与局部坐标',category:'2D 视觉',desc:'移动 ROI 和特征点，观察裁剪、缩放与原图坐标的还原。',article:'2d-roi'},
 {id:'edge-scan',title:'测量线找边：灰度、方向与阈值',category:'2D 视觉',desc:'改变灰度差、扫描方向和阈值，观察候选边缘。',article:'2d-features'},
 {id:'stereo',title:'双目视差与距离',category:'3D 视觉',desc:'改变基线与目标距离，观察理想双目视差变化。',article:'3d-stereo'},
 {id:'depth-cloud',title:'深度图到点云：遮挡与无效点',category:'3D 视觉',desc:'调整相机距离和视角，观察深度像素、点云、遮挡与模拟无效点。',article:'3d-pointcloud'},
