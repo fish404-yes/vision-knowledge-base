@@ -1,0 +1,31 @@
+(function(root){
+ 'use strict';
+ function markArt(){
+  return `<svg viewBox="0 0 620 360" role="img" aria-label="双 Mark 定位与旋转角示意图"><defs><pattern id="workbench-mark-grid" width="35" height="35" patternUnits="userSpaceOnUse"><path d="M35 0H0V35" fill="none" stroke="#d7e7e6"/></pattern></defs><rect width="620" height="360" rx="16" fill="#ecf5f2"/><rect width="620" height="360" rx="16" fill="url(#workbench-mark-grid)"/><rect x="105" y="143" width="370" height="76" rx="8" fill="none" stroke="#9eb5ba" stroke-width="2" stroke-dasharray="6 5"/><g transform="rotate(-17 290 180)"><rect x="105" y="143" width="370" height="76" rx="8" fill="#79bfb2" fill-opacity=".18" stroke="#288e79" stroke-width="2"/><path d="M137 181H440" stroke="#268d79" stroke-width="2"/><circle cx="137" cy="181" r="7" fill="#edaa77"/><circle cx="440" cy="181" r="7" fill="#4e8bb9"/><circle cx="290" cy="181" r="8" fill="white" stroke="#268d79" stroke-width="3"/><text x="114" y="165" fill="#985b3e" font-size="13" font-family="sans-serif">M1</text><text x="438" y="165" fill="#426887" font-size="13" font-family="sans-serif">M2</text></g><path d="M73 305h48 M73 305v-48" stroke="#778e98" stroke-width="2"/><text x="125" y="309" fill="#728c94" font-size="13" font-family="sans-serif">X</text><text x="68" y="250" fill="#728c94" font-size="13" font-family="sans-serif">Y</text><path d="M290 180h65 A65 65 0 0 0 350 161" stroke="#d99969" stroke-width="2" fill="none"/><text x="359" y="169" fill="#b8774d" font-size="15" font-family="sans-serif">Δθ</text><text x="390" y="325" fill="#728c85" font-size="12" letter-spacing="1.5" font-family="sans-serif">2D POSITION / 示意</text></svg>`;
+ }
+ function mount(target,ctx){
+  const {data,demos,projects,esc,icon,count,goSearch}=ctx;
+  const categories=data.categories.map(c=>`<a class="home-category" href="#category/${esc(c.id)}"><span class="icon tone-${esc(c.tone)}">${icon(c.icon)}</span><span class="home-category-copy"><strong>${esc(c.name)}</strong><small>${esc(c.subtitle)}</small></span><span class="home-category-count">${count(c.id)} <span aria-hidden="true">↗</span></span></a>`).join('');
+  const project=projects.projects.find(p=>p.id==='single');
+  const figures=demos.catalogue.filter(d=>['marks','handeye-poses','lighting-guide'].includes(d.id));
+  const featured=['camera-selection','light-selection','3d-overview'].map(id=>data.articles.find(a=>a.id===id)).filter(Boolean);
+  const issueLink=q=>'#issues?q='+encodeURIComponent(q);
+  target.innerHTML=`<div class="wrap home-workspace">
+   <section class="home-heading"><div><div class="home-kicker">VISION WORKSPACE</div><h1>视觉知识工作台</h1><p>把成像、定位与应用中的问题，放到同一个地方查找。</p></div><span class="home-heading-badge">✳　查阅与实践</span></section>
+   <form class="home-search" role="search" aria-label="首页全站搜索"><label for="home-query" aria-label="搜索知识点"><span aria-hidden="true">⌕</span></label><input id="home-query" type="search" placeholder="搜索相机、镜头、光源、标定…"><button type="submit">查找</button></form>
+   <div class="home-quick"><span>常用入口</span><a href="#article/camera-selection">相机选型 ↗</a><a href="#article/lens-fov">镜头焦距 ↗</a><a href="#project/single">双 Mark ↗</a><a href="#tools">视野估算 ↗</a></div>
+   <div class="home-dashboard"><div class="home-primary">
+    <section class="home-panel home-categories"><div class="home-panel-head"><div><span>KNOWLEDGE INDEX</span><h2>按主题查找</h2></div><a href="#browse">全部知识 ↗</a></div><div class="home-category-grid">${categories}</div><div class="home-panel-footer">${data.categories.length} 个知识主题 · ${data.articles.length} 篇知识点</div></section>
+    <section class="home-panel home-project"><div class="home-panel-head"><div><span>PROJECT CASES</span><h2>从项目理解定位</h2></div><a href="#projects">全部案例 ↗</a></div><a class="home-project-feature" href="#project/single"><span class="home-project-art">${markArt()}</span><span class="home-project-copy"><small>2D 定位 / 案例</small><strong>${esc(project.title)}</strong><span>从拍照位姿、图像点到基座坐标，按步骤查看定位过程。</span><b>进入案例　→</b></span></a></section>
+    <section class="home-panel home-figures"><div class="home-panel-head"><div><span>INTERACTIVE FIGURES</span><h2>把知识点动起来</h2></div><a href="#interactive">全部图解 ↗</a></div><p class="home-panel-desc">调整参数，观察成像、坐标和定位结果如何变化。</p><div class="home-figure-grid">${figures.map(d=>`<a href="#demo/${esc(d.id)}"><span>${esc(d.category)} · 可互动</span><strong>${esc(d.title)}</strong><small>${esc(d.desc)}</small><b>打开图解 →</b></a>`).join('')}</div></section>
+    <section class="home-panel home-featured"><div class="home-panel-head"><div><span>PRACTICAL GUIDES</span><h2>从选型问题开始</h2></div><a href="#browse">浏览知识 ↗</a></div><div class="home-feature-list">${featured.map(a=>`<a href="#article/${esc(a.id)}"><strong>${esc(a.title)}</strong><span>${esc(a.desc)}</span><b>↗</b></a>`).join('')}</div></section>
+   </div><aside class="home-rail" aria-label="常用工具与问题">
+    <a class="home-tool-card" href="#tools"><span class="home-tool-top">QUICK TOOLS ${icon('target')}</span><strong>相机与镜头<br>选型估算</strong><span>把目标尺寸与工作条件代入，得到初步参考。</span><b>打开估算工具 ↗</b></a>
+    <section class="home-panel home-issues"><div class="home-panel-head"><div><span>TROUBLESHOOTING</span><h2>常见问题</h2></div><a href="#issues">全部 ↗</a></div><a href="${issueLink('图像模糊')}"><i>01</i><span><strong>图像模糊或边缘不清</strong><small>对焦 · 曝光 · 景深</small></span><b>↗</b></a><a href="${issueLink('双 Mark 角度跳变')}"><i>02</i><span><strong>双 Mark 角度跳变</strong><small>身份 · 顺序 · 坐标</small></span><b>↗</b></a><a href="${issueLink('产品转得越多')}"><i>03</i><span><strong>旋转后抓取偏差增大</strong><small>TCP · 示教 · 补偿</small></span><b>↗</b></a></section>
+    <a class="home-interactive-card" href="#interactive"><strong>${demos.catalogue.length}</strong><span>个互动图解<small>把坐标和成像动起来</small></span><b>↗</b></a>
+   </aside></div>
+  </div>`;
+  target.querySelector('.home-search').addEventListener('submit',event=>{event.preventDefault();goSearch(target.querySelector('#home-query').value)});
+ }
+ root.VisionWorkspaceHome={mount};
+})(window);

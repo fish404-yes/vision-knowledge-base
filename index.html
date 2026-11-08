@@ -1,1 +1,97 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="机器视觉知识库：相机、镜头、光源、2D/3D、标定与应用选型参考。"><meta name="color-scheme" content="light dark"><title>VISION INDEX · 机器视觉知识库</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%2312373a%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%228%22 fill=%22none%22 stroke=%22%23bfe1d2%22 stroke-width=%222%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%223%22 fill=%22%23bfe1d2%22/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="selection.css?v=field-help-20261107b"><script defer src="knowledge.js?v=thinlens-20261107"></script><script defer src="knowledge-extra.js?v=scenarios-20261107"></script><script defer src="estimate.js"></script><script defer src="selection.js?v=save-20261107"></script><script defer src="models.js?v=thinlens-20261107"></script><script defer src="scenario-models.js?v=20261107"></script><link rel="stylesheet" href="scenario-guides.css?v=20261107"><script defer src="scenario-guides.js?v=20261107"></script><script defer src="spatial-models.js?v=20261108"></script><link rel="stylesheet" href="spatial-guides.css?v=20261108"><script defer src="spatial-guides.js?v=20261108"></script><script defer src="experiences.js?v=spatial-20261108"></script><script defer src="project-models.js"></script><script defer src="projects.js"></script><script defer src="project-extras.js?v=20261107"></script><script defer src="theme.js"></script><link rel="stylesheet" href="lens-guide.css?v=20261107"><script defer src="lens-guide.js?v=20261107"></script><link rel="stylesheet" href="issues.css?v=layout-20261107"><script defer src="issues.js?v=layout-20261107"></script><script defer src="app.js?v=spatial-20261108"></script><link rel="stylesheet" href="visits.css?v=20261107"><script defer src="visits.js?v=20261107"></script></head><body><a class="skip" href="#main">跳到正文</a><header class="header"><div class="header-inner"><a href="#home" class="brand" aria-label="机器视觉知识库首页"><span class="brand-icon"><span></span></span><span class="brand-name">机器视觉知识库<small>VISION INDEX</small></span></a><nav class="topnav" aria-label="主要导航"><a href="#home" data-nav="home">首页</a><a href="#browse" data-nav="browse">知识目录</a><a href="#projects" data-nav="projects">2D 项目</a><a href="#interactive" data-nav="interactive">互动图解</a><a href="#tools" data-nav="tools">选型估算</a><a href="#issues" data-nav="issues">问题排查</a></nav><form class="header-search" role="search" aria-label="全站搜索"><span aria-hidden="true">⌕</span><input name="q" type="search" placeholder="搜索相机、光源、标定…" aria-label="搜索知识点"><button type="submit">搜索</button></form><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换为深色界面" aria-pressed="false">☾ 深色</button><span class="local-status"><i></i> 视觉知识库</span><button class="mobile-toggle" aria-label="打开导航" aria-controls="mobile-nav" aria-expanded="false">☰</button></div><nav class="mobile-nav" id="mobile-nav" hidden aria-label="手机导航"><a href="#home">首页</a><a href="#browse">知识目录</a><a href="#projects">2D 项目</a><a href="#interactive">互动图解</a><a href="#tools">选型估算</a><a href="#issues">问题排查</a></nav></header><main id="main" tabindex="-1"></main><footer><div class="footer-inner"><div><strong>◉　机器视觉知识库</strong><span> 为方案、调试和现场沟通提供参考。</span></div><div class="footer-meta"><div class="site-visits"><span class="site-visits-label">全站累计访问</span><span class="site-visits-status" id="visit-status" role="status" aria-live="polite">统计加载中…</span><img id="visit-badge" alt="全站累计访问数，由 Hits 提供" referrerpolicy="no-referrer" hidden></div><p>自启用后统计 · 打开或刷新计入，站内切换不计 · <a href="https://hits.sh/privacy/" target="_blank" rel="noopener noreferrer">Hits 统计说明</a></p><p>知识参考 · 示例仅供估算 · 具体项目需样件验证</p></div></div></footer></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="机器视觉知识库：相机、镜头、光源、2D/3D、标定与应用选型参考。">
+  <meta name="color-scheme" content="light dark">
+  <title>VISION INDEX · 机器视觉知识库</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%2312373a%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%228%22 fill=%22none%22 stroke=%22%23bfe1d2%22 stroke-width=%222%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%223%22 fill=%22%23bfe1d2%22/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="selection.css?v=field-help-20261107b">
+  <link rel="stylesheet" href="scenario-guides.css?v=20261107">
+  <link rel="stylesheet" href="spatial-guides.css?v=20261108">
+  <link rel="stylesheet" href="lens-guide.css?v=20261107">
+  <link rel="stylesheet" href="issues.css?v=workspace-20261108">
+  <link rel="stylesheet" href="visits.css?v=20261107">
+  <link rel="stylesheet" href="workspace.css?v=20261108">
+  <script defer src="knowledge.js?v=thinlens-20261107"></script>
+  <script defer src="knowledge-extra.js?v=scenarios-20261107"></script>
+  <script defer src="estimate.js"></script>
+  <script defer src="selection.js?v=save-20261107"></script>
+  <script defer src="models.js?v=thinlens-20261107"></script>
+  <script defer src="scenario-models.js?v=20261107"></script>
+  <script defer src="scenario-guides.js?v=20261107"></script>
+  <script defer src="spatial-models.js?v=20261108"></script>
+  <script defer src="spatial-guides.js?v=20261108"></script>
+  <script defer src="experiences.js?v=spatial-20261108"></script>
+  <script defer src="project-models.js"></script>
+  <script defer src="projects.js"></script>
+  <script defer src="project-extras.js?v=20261107"></script>
+  <script defer src="theme.js"></script>
+  <script defer src="lens-guide.js?v=20261107"></script>
+  <script defer src="issues.js?v=workspace-20261108"></script>
+  <script defer src="workspace-home.js?v=20261108"></script>
+  <script defer src="app.js?v=workspace-20261108"></script>
+  <script defer src="visits.js?v=20261107"></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <div class="workspace-shell">
+    <aside class="workspace-sidebar" aria-label="网站侧栏">
+      <div class="workspace-sidebar-inner">
+        <a href="#home" class="brand" aria-label="机器视觉知识库首页">
+          <span class="brand-icon"><span></span></span>
+          <span class="brand-name">机器视觉知识库<small>VISION WORKBENCH</small></span>
+        </a>
+        <p class="workspace-nav-label"><span>工作区</span><span>WORKSPACE</span></p>
+        <nav class="topnav" aria-label="主要导航">
+          <a href="#home" data-nav="home"><span class="workspace-nav-icon" aria-hidden="true">◫</span>首页</a>
+          <a href="#browse" data-nav="browse"><span class="workspace-nav-icon" aria-hidden="true">⌕</span>知识目录</a>
+          <a href="#projects" data-nav="projects"><span class="workspace-nav-icon" aria-hidden="true">⌗</span>2D 项目</a>
+          <a href="#interactive" data-nav="interactive"><span class="workspace-nav-icon" aria-hidden="true">◉</span>互动图解</a>
+          <a href="#tools" data-nav="tools"><span class="workspace-nav-icon" aria-hidden="true">⌁</span>选型估算</a>
+          <a href="#issues" data-nav="issues"><span class="workspace-nav-icon" aria-hidden="true">✳</span>问题排查</a>
+        </nav>
+        <p class="workspace-nav-label categories-label"><span>知识分类</span><span>INDEX</span></p>
+        <nav id="sidebar-categories" class="workspace-categories" aria-label="知识分类"></nav>
+        <div class="workspace-sidebar-note">
+          <span aria-hidden="true">✳</span>
+          <strong>遇到视觉问题？</strong>
+          <p>从现场现象开始逐项检查。</p>
+          <a href="#issues">查看问题排查 →</a>
+        </div>
+      </div>
+    </aside>
+    <div class="workspace-content">
+      <header class="workspace-topbar">
+        <a href="#home" class="workspace-mobile-brand" aria-label="机器视觉知识库首页"><span class="brand-icon"><span></span></span><strong>视觉知识库</strong></a>
+        <div class="workspace-path"><span>机器视觉知识库</span><span aria-hidden="true">/</span><strong id="workspace-current">首页</strong></div>
+        <form class="header-search" role="search" aria-label="全站搜索">
+          <span aria-hidden="true">⌕</span><input name="q" type="search" placeholder="搜索相机、光源、标定…" aria-label="搜索知识点"><button type="submit">搜索</button>
+        </form>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换为深色界面" aria-pressed="false">☾ 深色</button>
+        <span class="local-status"><i></i> 视觉知识库</span>
+        <button class="mobile-toggle" type="button" aria-label="打开导航" aria-controls="mobile-nav" aria-expanded="false">☰</button>
+      </header>
+      <nav class="mobile-nav" id="mobile-nav" hidden aria-label="手机导航">
+        <div class="mobile-nav-links">
+          <a href="#home" data-nav="home">首页</a><a href="#browse" data-nav="browse">知识目录</a><a href="#projects" data-nav="projects">2D 项目</a><a href="#interactive" data-nav="interactive">互动图解</a><a href="#tools" data-nav="tools">选型估算</a><a href="#issues" data-nav="issues">问题排查</a>
+        </div>
+        <form class="mobile-search" role="search" aria-label="手机端全站搜索"><input type="search" name="q" aria-label="搜索知识点" placeholder="搜索相机、光源、标定…"><button type="submit">搜索</button></form>
+      </nav>
+      <main id="main" tabindex="-1"></main>
+      <footer>
+        <div class="footer-inner">
+          <div><strong>◉　机器视觉知识库</strong><span> 为方案、调试和现场沟通提供参考。</span></div>
+          <div class="footer-meta">
+            <div class="site-visits"><span class="site-visits-label">全站累计访问</span><span class="site-visits-status" id="visit-status" role="status" aria-live="polite">统计加载中…</span><img id="visit-badge" alt="全站累计访问数，由 Hits 提供" referrerpolicy="no-referrer" hidden></div>
+            <p>自启用后统计 · 打开或刷新计入，站内切换不计 · <a href="https://hits.sh/privacy/" target="_blank" rel="noopener noreferrer">Hits 统计说明</a></p>
+            <p>知识参考 · 示例仅供估算 · 具体项目需样件验证</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
