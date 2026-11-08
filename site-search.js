@@ -11,7 +11,7 @@
   for(const p of projects||[])out.push({group:'projects',title:p.title,desc:p.desc,href:'#project/'+encodeURIComponent(p.id),keywords:[p.label,...(p.steps||[])]});
   for(const d of demos||[])out.push({group:'demos',title:d.title,desc:d.desc,href:'#demo/'+encodeURIComponent(d.id),keywords:[d.category]});
   out.push({group:'tools',title:'图像实验区：ROI、阈值与 Blob',desc:'使用内置示例或本地图片，查看灰度直方图、阈值结果和连通域。',href:'#image-lab',keywords:['图片','图像处理','阈值','直方图','连通域','质心','面积','ROI','像素']});
-  out.push({group:'tools',title:'相机与镜头选型估算',desc:'根据视野、工作距离和采样需求初步估算焦距与相机像素。',href:'#tools',keywords:['选型','镜头','相机','焦距','视野','工作距离','传感器','曝光','运动模糊']});
+  out.push({group:'tools',title:'相机、镜头与光源联合选型',desc:'共享工件条件，联动估算视野、相机像素、镜头和光源试选。',href:'#tools',keywords:['选型','镜头','远心','相机','光源','照明','背光','试光','焦距','视野','工作距离','传感器','曝光','运动模糊']});
   for(const c of issues||[])out.push({group:'issues',title:c.title,desc:c.desc,href:'#issues?q='+encodeURIComponent(c.title),keywords:[c.category,...(c.steps||[])]});
   return out;
  }

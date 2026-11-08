@@ -53,5 +53,5 @@
   function select(id){const m=methods[id];target.querySelector('.scenario-figure').innerHTML=methodScene(id);target.querySelector('.scenario-method-result').innerHTML=`<span class="scenario-kicker">${m.badge}</span><h3>${m.title}</h3><p><strong>怎么得到深度：</strong>${m.principle}</p><p><strong>常见任务：</strong>${m.uses}</p><p><strong>需要核对：</strong>${m.limits}</p><a href="${m.link}">${m.linkText} →</a>`;target.querySelectorAll('[data-method]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.method===id)))}
   target.querySelectorAll('[data-method]').forEach(b=>b.addEventListener('click',()=>select(b.dataset.method)));select('stereo');
  }
- root.VisionScenarioGuides={mount(target,id){if(id==='lighting-guide')lightGuide(target);else if(id==='3d-compare')compareGuide(target)}};
+ root.VisionScenarioGuides={lightScene,mount(target,id){if(id==='lighting-guide')lightGuide(target);else if(id==='3d-compare')compareGuide(target)}};
 })(window);
