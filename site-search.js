@@ -5,7 +5,7 @@
  'use strict';
  const groups=[['articles','知识点'],['projects','2D 项目'],['cases','现场案例'],['demos','互动图解'],['tools','工具'],['issues','问题排查']];
  const topics=[
-  {id:'selection',label:'成像系统选型',terms:['相机选型','镜头选型','硬件选型','系统选型'],members:['article:camera-selection','article:camera-sampling','article:camera-formats','article:lens-fov','article:light-selection','article:app-selection','demo:view','tool:selection']},
+  {id:'selection',label:'成像系统选型',terms:['相机选型','镜头选型','硬件选型','系统选型'],members:['article:camera-selection','article:camera-sampling','article:camera-formats','article:lens-fov','article:light-selection','article:app-selection','demo:view','tool:selection','tool:compare']},
   {id:'fov',label:'视野与采样',terms:['视野','视场','fov','像素密度','采样间距'],members:['article:camera-selection','article:camera-sampling','article:lens-fov','article:telecentric','demo:view','demo:lens-height','tool:selection']},
   {id:'lighting',label:'光源与试光',terms:['光源选型','照明','布光','试光','反光','过曝'],members:['article:light-selection','article:light-reflection','article:ring-bar','article:backlight','article:coaxial-dome','article:lighting-color','article:light-flash','demo:lighting','demo:lighting-guide','demo:light-compare','case:scratch','tool:selection','issue:overexposure']},
   {id:'blur',label:'模糊与曝光',terms:['图像模糊','运动模糊','拖影','失焦','曝光时间'],members:['article:lens-aperture','article:sensor-shutter','article:light-flash','article:trigger-throughput','demo:shutter','tool:selection','issue:blur']},
@@ -38,6 +38,7 @@
   for(const d of demos||[])out.push({key:'demo:'+d.id,group:'demos',title:d.title,desc:d.desc,href:'#demo/'+encodeURIComponent(d.id),tags:[],keywords:[d.category],links:d.article?['article:'+d.article]:[]});
   out.push({key:'tool:image-lab',group:'tools',title:'图像实验区：ROI、阈值、Blob 与找边',desc:'使用示例或本地图片，查看阈值、连通域与测量线灰度曲线。',href:'#image-lab',tags:[],keywords:['图片','图像处理','阈值','直方图','连通域','质心','面积','ROI','像素','找边','测量线','灰度曲线'],links:[]});
   out.push({key:'tool:selection',group:'tools',title:'相机、镜头与光源联合选型',desc:'共享工件条件，联动估算视野、相机像素、镜头和光源试选。',href:'#tools',tags:[],keywords:['选型','镜头','远心','相机','光源','照明','背光','试光','焦距','视野','工作距离','传感器','曝光','运动模糊'],links:[]});
+  out.push({key:'tool:compare',group:'tools',title:'相机镜头光源 A/B 方案对比',desc:'同一工况下比较两套成像方案的视野、采样与曝光位移。',href:'#compare',tags:['方案对比'],keywords:['选型','相机','镜头','光源','焦距','像素','远心','视野','曝光','方案对比','AB对比'],links:['tool:selection']});
   for(const c of issues||[])out.push({key:'issue:'+(c.id||c.title),group:'issues',title:c.title,desc:c.desc,href:'#issues?q='+encodeURIComponent(c.title),tags:c.aliases||[],keywords:[c.category,...(c.aliases||[]),...(c.steps||[])],links:[]});
   for(const e of out){e.topics=topics.filter(t=>t.members.includes(e.key)).map(t=>t.id);e.topicTerms=topics.filter(t=>e.topics.includes(t.id)).flatMap(t=>[t.label,...t.terms])}
   return out;
