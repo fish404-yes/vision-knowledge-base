@@ -19,6 +19,8 @@ const catalogue=[
 {id:'bounding-box-rotation',title:'旋转时的普通框与旋转框',category:'2D 视觉',desc:'转动细长工件，比较轴对齐外接框与旋转外接框的尺寸及筛选结果。',article:'2d-features'},
 {id:'stereo',title:'双目视差与距离',category:'3D 视觉',desc:'改变基线与目标距离，观察理想双目视差变化。',article:'3d-stereo'},
 {id:'depth-cloud',title:'深度图到点云：遮挡与无效点',category:'3D 视觉',desc:'调整相机距离和视角，观察深度像素、点云、遮挡与模拟无效点。',article:'3d-pointcloud'},
+{id:'laser-scan-cloud',title:'激光轮廓扫描：一条线到点云',category:'3D 视觉',desc:'分步观察轮廓、运动和点云，比较定时采集与理想编码器等距采集。',article:'3d-laser'},
+{id:'plane-height',title:'点云测高：为什么需要基准面',category:'3D 视觉',desc:'改变基准面姿态，比较点的 Z、竖直差和到平面的法向高度。',article:'3d-pointcloud'},
 {id:'3d-compare',title:'四种 3D 方法对比',category:'3D 视觉',desc:'比较双目、结构光、激光轮廓和 ToF 的原理与适用条件。',article:'3d-overview'},
 {id:'profile',title:'激光轮廓与高度',category:'3D 视觉',desc:'调整工件截面高度，观察一条模拟轮廓线。',article:'3d-laser'},
 {id:'frames',title:'像素与物理坐标',category:'标定与坐标',desc:'移动图像点，看简单平面标定如何映射到物理位置。',article:'calib-frames'},
@@ -109,6 +111,7 @@ if(type==='placement'){
 throw new Error('Unknown demonstration');
 }
 function mount(target,id,options){
+ if(id==='laser-scan-cloud'||id==='plane-height'){if(target&&root.Vision3DLabs)root.Vision3DLabs.mount(target,id);return}
  if(id==='bounding-box-rotation'){if(target&&root.VisionBoundingBoxDemo)root.VisionBoundingBoxDemo.mount(target);return}
  if(id==='pixel-plane-chain'){if(target&&root.VisionPixelPlaneChain)root.VisionPixelPlaneChain.mount(target);return}
  if(id==='roi-coordinates'||id==='edge-scan'){if(target&&root.Vision2DBasicDemos)root.Vision2DBasicDemos.mount(target,id);return}
