@@ -44,8 +44,10 @@
   if(major<=0||major<3*minor)return null;
   return .5*Math.atan2(2*xy,yy-xx)*180/Math.PI;
  }
- function analyze(s){
-  const gray=generate(s);if(!gray)return null;
+ function analyze(s){return analyzeGray(s,generate(s))}
+ // 本函数的亮度可信度门控只适合已知合成条件；调用者必须给出对应参数。
+ function analyzeGray(s,gray){
+  if(!valid(s)||!gray||gray.length!==W*H)return null;
   const roi={x:10,y:20,w:s.roiRight-10,h:80};
   const result=L.analyze(gray,W,H,{roi,threshold:s.threshold,minArea:s.minArea,connectivity:8,polarity:'bright',morphology:s.morphology,kernelSize:s.kernelSize});
   const quality=s.brightness-BG>=20&&s.threshold>BG&&s.threshold<=s.brightness;
@@ -81,5 +83,5 @@
   else if(badPitch.length){status='ng';reason=badPitch.map(p=>p.from+'–'+p.to+' 号').join('、')+'的中心间距超出本例范围。'}
   return {gray,roi,result,slots:assignments,pairs,extras,ambiguous,quality,coverage,found,missing,badAngle,badPitch,status,reason};
  }
- return {W,H,BG,COUNT,PITCH,ANGLE_LIMIT,PITCH_TOLERANCE,slots,defaults,generate,analyze};
+ return {W,H,BG,COUNT,PITCH,ANGLE_LIMIT,PITCH_TOLERANCE,slots,defaults,generate,analyze,analyzeGray};
 });
