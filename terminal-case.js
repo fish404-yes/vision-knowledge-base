@@ -2,7 +2,7 @@
 (function(root){
  'use strict';
  const api=root.VISION_PROJECTS,M=root.VisionTerminalCase,oldMount=api.mount;
- const item={id:'terminal-missing',title:'连接器端子检测：缺失、歪斜与间距',label:'端子检测',desc:'切换端子状态，用多张合成样本对比阈值、面积筛选与误报、漏检。',links:['article:2d-threshold','project:blob-regions','tool:image-lab'],steps:['确认要求','设置 ROI','阈值分割','形态学','Blob 与槽位','形状与间距','输出判断']};
+ const item={id:'terminal-missing',title:'连接器端子检测：缺失、歪斜与间距',label:'端子检测',desc:'切换端子状态，用合成样本对比阈值、面积与形状筛选的结果。',links:['article:2d-threshold','project:blob-regions','tool:image-lab'],steps:['确认要求','设置 ROI','阈值分割','形态学','Blob 与槽位','形状与间距','输出判断']};
  api.projects.push(item);
  const options=(key,label,values)=>'<label class="term-select" for="terminal-'+key+'">'+label+'<select id="terminal-'+key+'" data-term-param="'+key+'">'+values.map(v=>'<option value="'+v[0]+'">'+v[1]+'</option>').join('')+'</select></label>';
  const range=(key,label,min,max,step,unit)=>'<label class="term-range" for="terminal-'+key+'"><span>'+label+' <output data-term-value="'+key+'"></output></span><input id="terminal-'+key+'" aria-label="'+label+'" data-term-param="'+key+'" type="range" min="'+min+'" max="'+max+'" step="'+step+'"><small>'+unit+'</small></label>';
