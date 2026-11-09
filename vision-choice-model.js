@@ -85,5 +85,14 @@
    needPitch,scan
   };
  }
- return {dimension,method,sampling,line,compare};
+ // 人工构造的教学示例，不对应任何实际设备。
+ function example(){return {
+  context:{task:'depth',coverage:'surface',motion:'moving',material:'matte'},
+  req:{width:100,height:50,near:300,far:350,feature:1,samples:5,tolerance:0.1,speed:200,spacing:0.2,length:120},
+  spec:{
+   A:{type:'line',name:'示例 A（虚构）',width:110,height:'',near:250,far:400,pitch:0.15,frequency:1500,repeatability:0.01,source:'虚构演示数据，非真实设备规格'},
+   B:{type:'line',name:'示例 B（虚构）',width:90,height:'',near:310,far:340,pitch:0.3,frequency:800,repeatability:0.02,source:'虚构演示数据，非真实设备规格'}
+  }
+ }}
+ return {dimension,method,sampling,line,compare,example};
 });
