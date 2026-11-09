@@ -16,6 +16,7 @@ const catalogue=[
 {id:'marks',title:'双 Mark 位置与方向',category:'2D 视觉',desc:'平移、旋转和交换 Mark，观察中点与方向角。',article:'2d-mark'},
 {id:'roi-coordinates',title:'ROI 范围与局部坐标',category:'2D 视觉',desc:'移动 ROI 和特征点，观察裁剪、缩放与原图坐标的还原。',article:'2d-roi'},
 {id:'edge-scan',title:'测量线找边：灰度、方向与阈值',category:'2D 视觉',desc:'改变灰度差、扫描方向和阈值，观察候选边缘。',article:'2d-features'},
+{id:'bounding-box-rotation',title:'旋转时的普通框与旋转框',category:'2D 视觉',desc:'转动细长工件，比较轴对齐外接框与旋转外接框的尺寸及筛选结果。',article:'2d-features'},
 {id:'stereo',title:'双目视差与距离',category:'3D 视觉',desc:'改变基线与目标距离，观察理想双目视差变化。',article:'3d-stereo'},
 {id:'depth-cloud',title:'深度图到点云：遮挡与无效点',category:'3D 视觉',desc:'调整相机距离和视角，观察深度像素、点云、遮挡与模拟无效点。',article:'3d-pointcloud'},
 {id:'3d-compare',title:'四种 3D 方法对比',category:'3D 视觉',desc:'比较双目、结构光、激光轮廓和 ToF 的原理与适用条件。',article:'3d-overview'},
@@ -108,6 +109,7 @@ if(type==='placement'){
 throw new Error('Unknown demonstration');
 }
 function mount(target,id,options){
+ if(id==='bounding-box-rotation'){if(target&&root.VisionBoundingBoxDemo)root.VisionBoundingBoxDemo.mount(target);return}
  if(id==='pixel-plane-chain'){if(target&&root.VisionPixelPlaneChain)root.VisionPixelPlaneChain.mount(target);return}
  if(id==='roi-coordinates'||id==='edge-scan'){if(target&&root.Vision2DBasicDemos)root.Vision2DBasicDemos.mount(target,id);return}
  if(id==='depth-cloud'){if(target&&root.VisionDepthCloud)root.VisionDepthCloud.mount(target);return}
