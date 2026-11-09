@@ -21,6 +21,7 @@ const catalogue=[
 {id:'3d-compare',title:'四种 3D 方法对比',category:'3D 视觉',desc:'比较双目、结构光、激光轮廓和 ToF 的原理与适用条件。',article:'3d-overview'},
 {id:'profile',title:'激光轮廓与高度',category:'3D 视觉',desc:'调整工件截面高度，观察一条模拟轮廓线。',article:'3d-laser'},
 {id:'frames',title:'像素与物理坐标',category:'标定与坐标',desc:'移动图像点，看简单平面标定如何映射到物理位置。',article:'calib-frames'},
+{id:'pixel-plane-chain',title:'从 ROI 缩放到物理坐标',category:'标定与坐标',desc:'分步查看原图、ROI 裁剪、缩放还原和平面标定，比较漏做缩放还原的偏差。',article:'calib-planar'},
 {id:'handeye-poses',title:'眼在手上：两次拍照与坐标',category:'标定与坐标',desc:'相机移动时，同一个 Mark 的像素如何配合各自拍照位姿映射到基座。',article:'calib-handeye'},
 {id:'placement',title:'上下相机贴合偏置',category:'应用与排查',desc:'改变产品在工具上的偏移和目标方向，反算工具位姿。',article:'app-alignment'}
 ];
@@ -107,6 +108,7 @@ if(type==='placement'){
 throw new Error('Unknown demonstration');
 }
 function mount(target,id,options){
+ if(id==='pixel-plane-chain'){if(target&&root.VisionPixelPlaneChain)root.VisionPixelPlaneChain.mount(target);return}
  if(id==='roi-coordinates'||id==='edge-scan'){if(target&&root.Vision2DBasicDemos)root.Vision2DBasicDemos.mount(target,id);return}
  if(id==='depth-cloud'){if(target&&root.VisionDepthCloud)root.VisionDepthCloud.mount(target);return}
  if(id==='light-compare'){if(target&&root.VisionLightCompare)root.VisionLightCompare.mount(target);return}

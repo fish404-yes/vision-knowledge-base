@@ -23,6 +23,16 @@
   const wrong={u:scaled.u+state.x,v:scaled.v+state.y};
   return {region,width,height,sx,sy,point:{scaled,local,original,wrong}};
  }
+ function calibrationChain(state,percent,mode,detected){
+  if(typeof detected!=='boolean')return null;
+  const resize=resizeRoi(state,percent,mode);
+  if(!resize)return null;
+  if(!resize.region.inside||!detected)return {status:resize.region.inside?'not-found':'outside',resize:{...resize,point:null},physical:null,wrongPhysical:null,error:null};
+  const map=p=>({x:100+.5*p.u,y:200-.5*p.v});
+  const physical=map(resize.point.original),wrongPhysical=map(resize.point.wrong);
+  const error={x:wrongPhysical.x-physical.x,y:wrongPhysical.y-physical.y};
+  return {status:'ok',resize,physical,wrongPhysical,error};
+ }
  function edge(state){
   if(!state||!Number.isInteger(state.contrast)||state.contrast<0||state.contrast>200||!Number.isInteger(state.threshold)||state.threshold<1||state.threshold>255||!['both','rising','falling'].includes(state.direction)||typeof state.reverse!=='boolean'||typeof state.noise!=='boolean')return null;
   const gray=Uint8Array.from({length:32},(_,x)=>x>=9&&x<=22?40+state.contrast:x===26&&state.noise?150:40);
@@ -30,5 +40,5 @@
   const result=profile.sample(gray,32,1,line,{threshold:state.threshold,direction:state.direction});
   return {gray,result};
  }
- return {image,roi,resizeRoi,edge};
+ return {image,roi,resizeRoi,calibrationChain,edge};
 });
