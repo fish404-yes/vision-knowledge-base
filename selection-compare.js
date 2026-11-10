@@ -2,6 +2,7 @@
  'use strict';
  const M=root.VisionCompareModel;
  const storageKey='vision-selection-compare-v1';
+ let memoryCompare=null;
  const defaults={A:{sensorWidth:'8.45',sensorHeight:'7.07',pixelsWidth:'2448',pixelsHeight:'2048',mode:'fixed',optic:'12',light:'ring',cameraColor:'mono',exposure:'2'},B:{sensorWidth:'8.45',sensorHeight:'7.07',pixelsWidth:'3072',pixelsHeight:'2560',mode:'fixed',optic:'16',light:'back',cameraColor:'mono',exposure:'1'}};
  const materials={matte:'哑光表面','flat-metal':'平整反光面','curved-metal':'曲面反光件',transparent:'透明件'};
  const goals={outline:'外轮廓／孔位',scratch:'划痕／表面纹理',text:'字符／图案',presence:'有无／位置'};
@@ -35,10 +36,12 @@
   target.innerHTML=`<section class="compare-panel" id="selection-compare" aria-labelledby="compare-heading"><div class="compare-heading"><div><span class="compare-kicker">SIDE BY SIDE / 方案对比</span><h2 id="compare-heading">同一个工件，比较两套成像方案</h2><p>上方工件、检测特征和运动速度作为共同条件；A、B 的相机、镜头、光源和曝光时间分别填写。上方曝光时间仅在填入初选时带入。</p></div><a href="#tools" data-top>调整共同条件 ↑</a></div><div class="compare-shared" data-shared></div><div class="compare-toolbar"><label>曝光位移参考上限 <input type="number" min="0.00001" step="any" value="1" data-limit> px</label><span>按物面水平／垂直方向分别估算；1 px 只是可修改的参考目标。</span><button type="button" data-copy>将 A 复制到 B</button></div><div class="compare-columns">${card('A')}${card('B')}</div><div class="compare-conclusion" data-conclusion aria-live="polite"></div><div class="compare-save"><div><strong>保存与分享对比</strong><p>保存在当前浏览器，包含共同条件及 A/B 参数；会覆盖上一次保存的对比。清除浏览器数据可能丢失。</p></div><div><button type="button" data-save>保存对比</button><button type="button" data-load>载入上次对比</button><button type="button" data-export>下载对比清单</button></div><p data-message role="status"></p></div><p class="compare-note">图形和数值只用于初选。定焦按针孔模型估算，远心按倍率估算；假设视野中心一致且目标位于同一工作平面。实际还须核对镜头像场、接口、工作距离、景深、传输、照明和样件成像。采样间距不是测量精度，光源不能仅凭名称判断效果。<a href="https://www.edmundoptics.com/knowledge-center/application-notes/imaging/understanding-focal-length-and-field-of-view/">焦距与视野</a> · <a href="https://docs.baslerweb.com/optimizing-image-quality">曝光与成像质量</a></p></section>`;
   const fieldNodes=id=>[...target.querySelectorAll(`[data-plan="${id}"] [data-field]`)];
   const write=(id,data)=>fieldNodes(id).forEach(el=>{if(Object.hasOwn(data,el.dataset.field))el.value=String(data[el.dataset.field])});
+  const readRaw=id=>Object.fromEntries(fieldNodes(id).map(el=>[el.dataset.field,el.value]));
   const read=id=>Object.fromEntries(fieldNodes(id).map(el=>[el.dataset.field,el.tagName==='SELECT'?el.value:(el.value.trim()===''?NaN:Number(el.value))]));
   const getLimit=()=>{const value=target.querySelector('[data-limit]').value;return value.trim()===''?NaN:Number(value)};
   const message=target.querySelector('[data-message]');
   write('A',defaults.A);write('B',defaults.B);
+  if(memoryCompare){write('A',memoryCompare.A);write('B',memoryCompare.B);target.querySelector('[data-limit]').value=memoryCompare.limit}
   function update(){
    const shared=bridge.readShared(),limit=getLimit(),a=read('A'),b=read('B'),ra=M.calculate(shared,a,limit),rb=M.calculate(shared,b,limit);
    const v=shared.values,c=shared.context;
@@ -57,6 +60,7 @@
     const motion=!ra.withinMotion||!rb.withinMotion?' 至少一套方案的曝光位移超过参考值。':'';
     conclusion.textContent=lead+motion+' 光源、镜头兼容性和实际精度仍需拍样确认。';
    }
+   memoryCompare={A:readRaw('A'),B:readRaw('B'),limit:target.querySelector('[data-limit]').value};
   }
   target.addEventListener('input',event=>{if(event.target.matches('[data-field],[data-limit]'))update()});
   target.addEventListener('change',event=>{if(event.target.matches('[data-field]'))update()});

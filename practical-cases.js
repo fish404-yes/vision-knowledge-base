@@ -1,6 +1,7 @@
 (function(root,factory){
- const api=factory(root);if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.VisionPracticalCases=api;
-})(typeof globalThis!=='undefined'?globalThis:this,function(root){
+ const model=typeof module==='object'&&module.exports?require('./vision-choice-model.js'):root.VisionChoiceModel;
+ const api=factory(root,model);if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.VisionPracticalCases=api;
+})(typeof globalThis!=='undefined'?globalThis:this,function(root,model){
  'use strict';
  const cases=[
   {id:'scratch',title:'反光金属表面划痕检测',label:'外观检测',desc:'从表面和缺陷入手，比较光源，再观察 ROI、分割与样件验证。',tags:['反光','划痕','低角度光','外观','缺陷'],links:['demo:light-compare','project:defect-threshold','tool:image-lab'],visual:'scratch',
@@ -37,7 +38,7 @@
    stages:[
     {title:'先写清项目要求',prepare:'示例假设需覆盖的活动范围为 150 × 120 mm；范围已考虑工件平移和旋转，最小定位特征宽 2 mm。',algorithm:'拍照时产品停稳，工件位于已知平面；确认机器人需要 X、Y 和角度，以及可接受的定位与抓取误差。',output:'输入：工件外观和可控平面；输出：约定坐标系下的平面位姿。',clue:'XYR 的 R 是约定方向的平面角，不能直接当成所有机器人控制器的姿态值。'},
     {title:'判断 2D 或 3D',prepare:'确认工件高度和倾斜在使用范围内可控，特征不会被遮挡，夹爪有已示教的抓取关系。',algorithm:'先评估 2D 拍照、特征定位和平面标定；若高度、倾斜或堆叠变化影响抓取，再比较机械限位、补偿或 3D。',output:'本例初选：2D 面阵成像 + 平面标定 + 机器人抓取补偿。',clue:'工件有厚度不必然要用 3D；但单张 2D 图像不能可靠给出任意未知高度与空间姿态。',links:[['打开 2D / 3D 判断','#tools']]},
-    {title:'估算成像条件',prepare:'在 2D 工具中手动填写范围 150 × 120 mm、余量 10%、最小特征 2 mm、目标采样 5 px。',algorithm:'视野至少约 165 × 132 mm；按示例采样目标，物面采样间距应不大于 2 ÷ 5 = 0.4 mm/px。再按相机传感器尺寸和工作距离试算镜头。',output:'优先比较视野覆盖、相机有效像素、镜头视野与成像圈；根据表面和特征试环形或侧向照明。',clue:'0.4 mm/px 是示例采样目标，不等于定位或抓取精度；光源类型也需用样件试出来。',links:[['打开 2D 选型并填写条件','#tools/2d']]},
+    {title:'估算成像条件',prepare:'示例范围 150 × 120 mm、余量 10%、最小特征 2 mm、目标采样 5 px；可一键带入 2D 选型。',algorithm:'视野至少约 165 × 132 mm；按示例采样目标，物面采样间距应不大于 2 ÷ 5 = 0.4 mm/px。再按相机传感器尺寸和工作距离试算镜头。',output:'优先比较视野覆盖、相机有效像素、镜头视野与成像圈；根据表面和特征试环形或侧向照明。',clue:'0.4 mm/px 是示例采样目标，不等于定位或抓取精度；光源类型也需用样件试出来。',transfer:true},
     {title:'联调并验证',prepare:'准备不同位置、角度和批次的样件，确认机械手拍照位、工具 TCP 和机器人侧示教抓取位。',algorithm:'验证图像到约定物理坐标的映射、角度正负、机器人补偿和实际抓取；记录失败图、偏差及周期。',output:'形成视野边缘、角度变化和重复抓取的验证记录，再决定具体设备。',clue:'相机在手上时，各次拍照需要对应的机器人位姿；不要对已经转换到基坐标的数据重复变换。',links:[['查看眼在手上双 Mark 案例','#case/two-mark']]}
    ]},
   {id:'selection-step-height',kind:'selection',title:'台阶测高：从轮廓到线频',label:'选型案例 · 高度测量',desc:'用输送中的台阶检测示例，连接线激光范围、点间距、线频和基准面。',tags:['3D选型','台阶测高','线激光','编码器','基准面','线频'],links:['tool:selection3d','demo:laser-scan-cloud','demo:plane-height','article:3d-laser'],visual:'height-selection',
@@ -47,7 +48,7 @@
    stages:[
     {title:'确定测什么高度',prepare:'假设需覆盖 100 × 50 mm 区域，最近与最远工作距离为 300～350 mm；高度结果相对指定基准面。',algorithm:'与工艺确认测量区域、基准面、点到面的方向、允许误差及测量节拍。',output:'输入：带台阶工件；输出：按约定定义计算的台阶高度。',clue:'0.1 mm 是虚构项目允许误差，不是传感器精度，也不是全部误差预算。'},
     {title:'判断采集范围',prepare:'一条轮廓能够观察单个截面；如果整个区域都要检查，就要确认是否允许工件与线激光相对运动。',algorithm:'本例先比较线激光加位置反馈扫描；也可按视野、时间和遮挡条件比较面扫描。只测固定点时可另评估位移传感器。',output:'本例初选：多条线轮廓 + 运动位置，组成可测量的表面数据。',clue:'线轮廓不能自行给出整面；运动、同步、遮挡和范围都需要验证。',links:[['看轮廓如何组成点云','#demo/laser-scan-cloud']]},
-    {title:'估算采样和线频',prepare:'假设速度为 200 mm/s，目标轮廓间距为 0.2 mm，计划扫描行程 120 mm。',algorithm:'理论线频 = 200 ÷ 0.2 = 1000 条/秒；匀速行程约 120 ÷ 200 = 0.6 秒。横向假设最小特征 1 mm、目标 5 点，点间距参考不大于 0.2 mm。',output:'在 3D 工具里核对工作距离、全深度有效宽度、点间距和对应曝光下的可用线频。',clue:'0.6 秒不包含加减速、处理与机器人动作；点间距、线频和 Z 重复性都不能单独证明工艺精度。',links:[['打开 3D 初选（可恢复默认示例）','#tools/3d']]},
+    {title:'估算采样和线频',prepare:'假设速度为 200 mm/s，目标轮廓间距为 0.2 mm，计划扫描行程 120 mm。',algorithm:'理论线频 = 200 ÷ 0.2 = 1000 条/秒；匀速行程约 120 ÷ 200 = 0.6 秒。横向假设最小特征 1 mm、目标 5 点，点间距参考不大于 0.2 mm。',output:'可将案例及下方当前速度、间距带入 3D 工具，核对工作距离、有效宽度、点间距和线频。',clue:'0.6 秒不包含加减速、处理与机器人动作；点间距、线频和 Z 重复性都不能单独证明工艺精度。',transfer:true},
     {title:'基准面与样件验证',prepare:'确认基准面可见，准备不同高度、表面、位置及方向的工件，检查编码器和触发信号。',algorithm:'从有效基准点拟合或建立基准面，按工艺定义测量目标高度；用已知高度的标准件和实际样件重复比较。',output:'记录高度误差、无效点、最差位置、扫描及处理时间。',clue:'基准面选择、缺点和反光都可能改变结果；按实际设备文档确认距离和误差定义。',links:[['操作点云基准面测高','#demo/plane-height']]}
    ]},
   {id:'selection-bin-pick',kind:'selection',title:'散乱抓取：从料箱到抓取姿态',label:'选型案例 · 3D 抓取',desc:'从料箱深度、遮挡和机器人路径出发，理解为什么要评估整面 3D 与实际抓取。',tags:['3D选型','散乱抓取','料箱','空间姿态','遮挡','碰撞'],links:['tool:selection3d','article:3d-handeye','demo:depth-cloud','demo:3d-compare'],visual:'bin-selection',
@@ -57,10 +58,22 @@
    stages:[
     {title:'描述料箱与目标',prepare:'示例假设需覆盖 550 × 400 mm 的范围，目标在相机参考距离约 700～1000 mm 内；工件可能相互遮挡。',algorithm:'确认箱口、箱底、最高堆叠、最小可辨特征、工件材质、可抓取面和每件节拍。',output:'输入：箱内随机工件；输出：可抓取目标的位置、所需方向及有效状态。',clue:'如果工件形状对称或关键面被遮挡，单次图像可能无法唯一确定完整方向。'},
     {title:'判断为什么考虑 3D',prepare:'位置、高度和倾斜都可能改变，平面标定的固定工作面假设不再覆盖整个场景。',algorithm:'先评估能覆盖箱内体积的 3D 采集；若还需识别颜色或字符，可结合 2D 图像。',output:'本例初选：3D 场景采集 + 工件识别 + 可抓取姿态筛选。',clue:'3D 也可能出现遮挡、反光或缺点；采到点云不代表已经算出可执行抓取姿态。',links:[['比较常见 3D 方法','#demo/3d-compare']]},
-    {title:'核对覆盖与安装',prepare:'从箱口到箱底核对视野、距离和分辨能力；确认相机安装、机器人和夹爪的空间关系。',algorithm:'比较固定安装或机器人携带相机，检查近远处视野、遮挡、曝光、采集及处理时间。',output:'将示例范围和距离手动填入 3D 选型页，形成待比较的采集方案。',clue:'3D 初选页打开时可能显示另一套台阶示例；请改成当前料箱条件，并按实际设备视野图核对。',links:[['打开 3D 选型并修改为料箱条件','#tools/3d']]},
+    {title:'核对覆盖与安装',prepare:'从箱口到箱底核对视野、距离和分辨能力；确认相机安装、机器人和夹爪的空间关系。',algorithm:'比较固定安装或机器人携带相机，检查近远处视野、遮挡、曝光、采集及处理时间。',output:'可将示例范围和距离带入 3D 选型页，形成待比较的采集方案。',clue:'案例未给出的特征尺寸、采样要求和设备规格需要补充；按实际设备视野图核对。',transfer:true},
     {title:'验证抓取得了吗',prepare:'准备满箱、半箱、少件以及靠箱壁、遮挡、不同朝向的样件，完成相机与机器人的坐标标定。',algorithm:'逐一验证目标识别、坐标变换、TCP、夹爪碰撞与可达路径；记录抓取成功率、失败原因和完整节拍。',output:'得到可复核的点云、位姿、抓取结果和最差场景记录，再确定设备与工艺。',clue:'视觉输出的目标位姿不自动包含夹爪避碰、路径规划或抓取成功保证。',links:[['查看深度图与点云','#demo/depth-cloud']]}
    ]}
  ];
+ let pendingTransfer=null;
+ function createTransfer(id,demo={}){
+  if(id==='selection-planar-pick')return {mode:'2d',id,title:'平面取料：为什么先看 2D？',values:{width:150,height:120,margin:10,distance:500,feature:2,featurePixels:5,sensorWidth:8.45,sensorHeight:7.07},context:{material:'matte',goal:'presence',backlight:'unknown',color:'unknown',lens:'fixed',speed:'0',exposure:'2'},note:'已带入高度可控的案例范围和采样目标。工作距离 500 mm、传感器 8.45 × 7.07 mm、曝光 2 ms 及普通定焦为演示假设；请按实际设备、特征和试光结果修改。'};
+  if(id==='selection-step-height'){
+   const speed=typeof demo.speed==='string'&&demo.speed.trim()!==''?Number(demo.speed):NaN,spacing=typeof demo.spacing==='string'&&demo.spacing.trim()!==''?Number(demo.spacing):NaN;
+   if(!model.line(speed,spacing,null))return null;
+   const example=model.example();return {mode:'3d',id,title:'台阶测高：从轮廓到线频',context:{task:'depth',coverage:'surface',motion:'moving',material:'unknown'},req:{...example.req,speed,spacing},spec:example.spec,note:'已带入案例条件和刚才调整的速度、间距；案例未指定表面材质，带入时留作待确认。初始设备 A/B 为虚构演示规格，请按实际设备资料修改。'};
+  }
+  if(id==='selection-bin-pick')return {mode:'3d',id,title:'散乱抓取：从料箱到抓取姿态',context:{task:'pose',coverage:'surface',motion:'unknown',material:'matte'},req:{width:550,height:400,near:700,far:1000},spec:{},note:'已带入料箱示例的范围、距离和任务；案例未提供运动方式、最小特征、采样点数和设备规格，带入时留作待确认。'};
+  return null;
+ }
+ function consumeTransfer(mode){const result=pendingTransfer;pendingTransfer=null;return result&&result.mode===mode?result:null}
  const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  function illustration(type,step){
   let body='';
@@ -96,8 +109,8 @@
   const steps=target.querySelector('.practical-steps'),content=target.querySelector('.practical-stage-content');
   function miniMarkup(){
    if(id==='selection-planar-pick'&&step===1)return '<div class="practical-mini" data-mini="height"><strong>动手试：高度条件变化</strong><div><button type="button" data-choice="controlled">高度可控</button><button type="button" data-choice="variable">高度有变化</button></div><p data-mini-result aria-live="polite"></p><small>仅改变本图解的判断，不会改动选型工具。</small></div>';
-   if(id==='selection-step-height'&&step===2)return '<div class="practical-mini" data-mini="scan"><strong>动手试：修改速度或间距</strong><div class="practical-mini-fields"><label>速度（mm/s）<input data-mini-speed type="number" min="0" step="any" value="'+esc(demo.speed)+'"></label><label>轮廓间距（mm）<input data-mini-spacing type="number" min="0.000001" step="any" value="'+esc(demo.spacing)+'"></label></div><p data-mini-result aria-live="polite"></p><small>仅估算匀速理论线频，不自动写入选型工具。</small></div>';
-   if(id==='selection-bin-pick'&&step===1)return '<div class="practical-mini" data-mini="coverage"><strong>动手试：改变采集范围</strong><div><button type="button" data-choice="surface">采集整面</button><button type="button" data-choice="point">只测单点</button></div><p data-mini-result aria-live="polite"></p><small>单点测量和三维抓取姿态是不同的信息。</small></div>';
+   if(id==='selection-step-height'&&step===2)return '<div class="practical-mini" data-mini="scan"><strong>动手试：修改速度或间距</strong><div class="practical-mini-fields"><label>速度（mm/s）<input data-mini-speed type="number" min="0" step="any" value="'+esc(demo.speed)+'"></label><label>轮廓间距（mm）<input data-mini-spacing type="number" min="0.000001" step="any" value="'+esc(demo.spacing)+'"></label></div><p data-mini-result aria-live="polite"></p><small>估算匀速理论线频；点击下方按钮时才会将当前数值带入选型工具。</small></div>';
+   if(id==='selection-bin-pick'&&step===1)return '<div class="practical-mini" data-mini="coverage"><strong>动手试：改变采集范围</strong><div><button type="button" data-choice="surface">采集整面</button><button type="button" data-choice="point">只测单点</button></div><p data-mini-result aria-live="polite"></p><small>仅用于比较；带入选型时使用本案例的整面采集条件。</small></div>';
    return '';
   }
   function mountMini(){
@@ -125,13 +138,14 @@
    const stage=item.stages[step];
    target.querySelector('.practical-diagram').innerHTML=illustration(item.visual,step);
    steps.innerHTML=item.stages.map((s,i)=>'<button type="button" data-step="'+i+'" aria-pressed="'+String(i===step)+'"><span>0'+(i+1)+'</span>'+esc(s.title)+'</button>').join('');
-   content.innerHTML='<span class="practical-step-badge">第 '+(step+1)+' / '+item.stages.length+' 步</span><h2>'+esc(stage.title)+'</h2><div class="practical-block"><span>准备</span><p>'+esc(stage.prepare)+'</p></div><div class="practical-block"><span>操作</span><p>'+esc(stage.algorithm)+'</p></div><div class="practical-block"><span>输出</span><p>'+esc(stage.output)+'</p></div><div class="practical-clue"><strong>观察与注意</strong><p>'+esc(stage.clue)+'</p></div>'+miniMarkup()+(stage.links?'<div class="practical-inline-links">'+stage.links.map(l=>'<a href="'+esc(l[1])+'">'+esc(l[0])+' →</a>').join('')+'</div>':'')+'<div class="practical-arrows"><button type="button" data-prev '+(step===0?'disabled':'')+'>← 上一步</button><span>'+(step+1)+' / '+item.stages.length+'</span><button type="button" data-next '+(step===item.stages.length-1?'disabled':'')+'>下一步 →</button></div>';
+   content.innerHTML='<span class="practical-step-badge">第 '+(step+1)+' / '+item.stages.length+' 步</span><h2>'+esc(stage.title)+'</h2><div class="practical-block"><span>准备</span><p>'+esc(stage.prepare)+'</p></div><div class="practical-block"><span>操作</span><p>'+esc(stage.algorithm)+'</p></div><div class="practical-block"><span>输出</span><p>'+esc(stage.output)+'</p></div><div class="practical-clue"><strong>观察与注意</strong><p>'+esc(stage.clue)+'</p></div>'+miniMarkup()+(stage.transfer?'<div class="practical-transfer"><button type="button" data-transfer>一键带入'+(id==='selection-planar-pick'?' 2D':' 3D')+' 选型 →</button><small>示例条件会填入当前页面，不会覆盖已保存方案。</small><p data-transfer-message role="status"></p></div>':'')+(stage.links?'<div class="practical-inline-links">'+stage.links.map(l=>'<a href="'+esc(l[1])+'">'+esc(l[0])+' →</a>').join('')+'</div>':'')+'<div class="practical-arrows"><button type="button" data-prev '+(step===0?'disabled':'')+'>← 上一步</button><span>'+(step+1)+' / '+item.stages.length+'</span><button type="button" data-next '+(step===item.stages.length-1?'disabled':'')+'>下一步 →</button></div>';
    mountMini();
+   const transferButton=content.querySelector('[data-transfer]');if(transferButton)transferButton.addEventListener('click',()=>{const value=createTransfer(id,demo);if(!value){content.querySelector('[data-transfer-message]').textContent='请先填写非负速度和大于 0 的轮廓间距。';return}pendingTransfer=value;root.location.hash='#tools/'+value.mode});
    steps.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{step=Number(b.dataset.step);update();steps.querySelector('[data-step="'+step+'"]').focus()}));
    content.querySelector('[data-prev]').addEventListener('click',()=>{if(step>0){step--;update();const nextFocus=content.querySelector('[data-prev]:not(:disabled)')||content.querySelector('[data-next]:not(:disabled)');if(nextFocus)nextFocus.focus()}});
    content.querySelector('[data-next]').addEventListener('click',()=>{if(step<item.stages.length-1){step++;update();const nextFocus=content.querySelector('[data-next]:not(:disabled)')||content.querySelector('[data-prev]:not(:disabled)');if(nextFocus)nextFocus.focus()}});
   }
   update();return true;
  }
- return{cases,mountIndex,mountDetail};
+ return{cases,mountIndex,mountDetail,createTransfer,consumeTransfer};
 });

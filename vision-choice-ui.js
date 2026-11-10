@@ -2,7 +2,7 @@
 (function(root){
  'use strict';
  const M=root.VisionChoiceModel,key='vision-3d-selection-draft-v1';
- let shared={task:'unknown',height:'unknown',coverage:'unknown',motion:'unknown',material:'unknown'},memoryDraft=null,memoryNote='';
+ let shared={task:'unknown',height:'unknown',coverage:'unknown',motion:'unknown',material:'unknown'},memoryDraft=null,memoryNote='',memoryOrigin=null,transferBackup=null;
  const taskOptions=[['unknown','请选择'],['appearance','颜色、字符或表面纹理'],['xy','平面 X、Y 与角度'],['depth','高度、台阶或截面'],['pose','空间位置与姿态'],['both','外观和高度都要']];
  const heightOptions=[['unknown','还不确定'],['controlled','可以控制'],['variable','有明显变化']];
  const coverOptions=[['unknown','请选择'],['point','固定一个点'],['profile','一条截面轮廓'],['surface','一个区域或整面']];
@@ -76,10 +76,10 @@
   return `<svg viewBox="0 0 620 285" role="img" aria-label="所需覆盖范围和最近、最远工作距离的概念示意，不代表具体相机视野"><rect width="620" height="285" rx="12" fill="#102b37"/><path d="M70 42H550M70 42V250" stroke="#416670" stroke-width="1" stroke-dasharray="5 5"/><rect x="72" y="88" width="94" height="54" rx="8" fill="#458e80"/><circle cx="163" cy="115" r="12" fill="#a8e7d1"/><text x="87" y="121" fill="#effbf5" font-size="15">3D 设备</text><path d="M178 104L410 53M178 127L410 225" stroke="#85cdb9" stroke-width="2" stroke-dasharray="6 5"/><path d="M360 63L505 82V224L360 204Z" fill="#82b4ed" fill-opacity=".24" stroke="#8fbff3" stroke-width="2"/><path d="M410 53V225" stroke="#f2bd78" stroke-width="2"/><text x="373" y="45" fill="#ffd29b" font-size="13">目标范围示意</text><text x="260" y="247" fill="#b9d9d5" font-size="12">最近 ${value(req.near,'mm')}　最远 ${value(req.far,'mm')}</text><text x="269" y="270" fill="#b9d9d5" font-size="12">所需范围 ${value(req.width,'mm')} × ${value(req.height,'mm')}</text></svg>`;
  }
  const stateText={pass:['规格数值覆盖','ok'],below:['规格数值不足','warn'],missing:['待填写 / 待确认','neutral'],invalid:['输入无效，请检查','warn'],na:['此项不适用','neutral'],scan:['需另核对扫描行程','neutral'],provided:['已填写，需看条件','neutral']};
- function mount3d(target){
+ function mount3d(target,incoming){
   target.innerHTML=`<section class="choice-panel choice-3d" aria-labelledby="choice-3d-title">
    <div class="choice-head"><div><span>3D SELECTION / INITIAL GUIDE</span><h2 id="choice-3d-title">先选采集方式，再核对参数</h2><p>先看一套完整示例，再把参数改成自己的工况。不确定的项目可留空。</p></div><button type="button" data-example3d>恢复全部示例数据</button></div>
-   <div class="choice-example-banner"><span>默认检测示例</span><strong>输送中的工件台阶检测</strong><p>假设检测范围为 100 × 50 mm，工件以 200 mm/s 经过线激光，目标轮廓间距为 0.2 mm。下方两组设备规格均为虚构，仅用于演示如何对照。</p><p data-example-state role="status"></p><small>可直接修改参数；恢复示例会替换当前页面输入，但不会改动已保存的本机草稿。</small></div>
+   <div class="choice-example-banner"><span data-origin-label></span><strong data-origin-title></strong><p data-origin-desc></p><p data-example-state role="status"></p><small>可直接修改参数；恢复示例会替换当前页面输入，但不会改动已保存的本机草稿。</small><button type="button" data-undo-transfer hidden>恢复带入前的条件</button></div>
    <div class="choice-context"><label><span>任务需要什么</span><select data-context="task">${option(taskOptions,shared.task)}</select></label><label><span>需要采集的范围</span><select data-context="coverage">${option(coverOptions,shared.coverage)}</select></label><label><span>采集时如何运动</span><select data-context="motion">${option(moveOptions,shared.motion)}</select></label><label><span>工件表面</span><select data-context="material">${option(materialOptions,shared.material)}</select></label></div>
    <div class="choice-method" data-method aria-live="polite"></div>
    <div class="choice-section-head"><span>01 / WORKING VOLUME</span><h3>明确范围与测量要求</h3><p>下面填写项目要求；请把旋转、位置变化与安全余量考虑进去。最近 / 最远距离应使用同一设备参考位置。</p></div>
@@ -88,18 +88,25 @@
    <div class="choice-section-head"><span>02 / LINE SCAN</span><h3>线激光扫描：速度与轮廓间距</h3><p>如果方案包含沿运动方向的轮廓扫描，可以填写；面扫描和单点静态测量可留空。</p></div>
    <div class="choice-fields choice-scan-fields">${scanFields.map(reqField).join('')}</div><div class="choice-scan-result" data-scan aria-live="polite"></div>
    <p class="choice-foot">近似线频 = 相对速度 ÷ 轮廓间距；忽略加减速、触发丢失和额外处理时间。应按实际曝光、编码器及设备规格核对。<a href="#demo/laser-scan-cloud">看一条轮廓如何拼成点云 →</a> · <a href="https://docs.cognex.com/vpro_980sr1/web/en/help/html/1ae429e2-2cba-4874-9be7-90afb6eefbb4.htm" target="_blank" rel="noopener noreferrer">参考：速度与轮廓采集 ↗</a></p>
-   <details class="choice-compare"><summary><span>03 / 设备规格 A/B 核对</span><strong>展开查看两组示例规格</strong><small>默认规格为虚构数据，可替换为真实规格。</small></summary>
+   <details class="choice-compare"><summary><span>03 / 设备规格 A/B 核对</span><strong>展开核对设备规格</strong><small>未填写项显示待确认；示例规格为虚构数据。</small></summary>
     <p>填写目标工作范围内的有效规格。数值覆盖只表示输入条件下的对照，不能证明拍样精度、有效率或产线合格。</p><div class="choice-spec-grid">${card('A')}${card('B')}</div><p>Z 重复性只显示输入状态；它不是绝对精度、最终测量误差或工艺合格结论。线扫的 Y 方向覆盖需结合行程与同步条件另行核对。</p></details>
    <div class="choice-save"><div><strong>保存这份 3D 条件</strong><p>站内切换会暂存当前输入；刷新前可保存到当前浏览器，需要时读取，不会改写 2D 已保存方案。</p></div><div><button type="button" data-save>保存到本机</button><button type="button" data-load>读取草稿</button><button type="button" data-export>下载清单</button><button type="button" data-reset>清空当前输入</button></div><p role="status" data-message></p></div>
    <p class="choice-foot">这是方案初选和规格人工核对，不推荐具体型号。真实结果受表面、遮挡、标定、距离、曝光、节拍和环境影响，需要用实际工件和条件验证。<a href="#case/selection-step-height">看台阶测高选型案例 →</a> · <a href="#case/selection-bin-pick">看散乱抓取选型案例 →</a> · <a href="#demo/plane-height">查看：基准面与测高 →</a> · <a href="https://support.zivid.com/en/latest/camera/academy/applications/piece-picking/camera-selector.html" target="_blank" rel="noopener noreferrer">参考：3D 场景范围 ↗</a></p>
   </section>`;
   const q=s=>target.querySelector(s),qa=s=>Array.from(target.querySelectorAll(s));
+  function setOrigin(origin){memoryOrigin=origin;q('[data-origin-label]').textContent=origin.label;q('[data-origin-title]').textContent=origin.title;q('[data-origin-desc]').textContent=origin.desc}
   function setNote(message){memoryNote=message;q('[data-example-state]').textContent=message}
+  function applySnapshot(data){
+   qa('[data-context]').forEach(el=>{const v=data.context?.[el.dataset.context];el.value=typeof v==='string'&&Array.from(el.options).some(o=>o.value===v)?v:'unknown'});
+   qa('[data-req]').forEach(el=>el.value=String(data.req?.[el.dataset.req]??''));
+   qa('[data-spec]').forEach(el=>{const v=String(data.spec?.[el.dataset.spec]?.[el.dataset.key]??'');el.value=el.tagName==='SELECT'&&!Array.from(el.options).some(o=>o.value===v)?'unknown':v});
+  }
   function applyExample(keepTask){
    const example=M.example(),previousTask=shared.task;
    qa('[data-context]').forEach(el=>el.value=keepTask&&el.dataset.context==='task'&&previousTask!=='unknown'?previousTask:example.context[el.dataset.context]);
    qa('[data-req]').forEach(el=>el.value=String(example.req[el.dataset.req]??''));
    qa('[data-spec]').forEach(el=>el.value=String(example.spec[el.dataset.spec]?.[el.dataset.key]??''));
+   setOrigin({label:'默认检测示例',title:'输送中的工件台阶检测',desc:'假设检测范围为 100 × 50 mm，工件以 200 mm/s 经过线激光，目标轮廓间距为 0.2 mm。默认两组设备规格均为虚构，仅用于演示如何对照。'});
    setNote(keepTask&&previousTask!=='unknown'?'已填入示例条件；任务类型沿用上一页，请核对是否符合你的项目。':'已填入台阶检测示例；可以直接修改下面的条件和规格。');
   }
   function readReq(){return Object.fromEntries(qa('[data-req]').map(el=>[el.dataset.req,num(el.value.trim())]))}
@@ -138,9 +145,7 @@
   q('[data-save]').addEventListener('click',()=>{try{localStorage.setItem(key,JSON.stringify(snapshot()));q('[data-message]').textContent='已保存到当前浏览器。'}catch(e){q('[data-message]').textContent='浏览器存储不可用，未能保存。'}});
   q('[data-load]').addEventListener('click',()=>{try{
    const data=JSON.parse(localStorage.getItem(key)||'null');if(!data||typeof data!=='object'||!data.context||!data.req||!data.spec)throw new Error('missing');
-   qa('[data-context]').forEach(el=>{const v=data.context[el.dataset.context];if(typeof v==='string'&&Array.from(el.options).some(o=>o.value===v))el.value=v});
-   qa('[data-req]').forEach(el=>{const v=data.req[el.dataset.req];if(typeof v==='string')el.value=v});
-   qa('[data-spec]').forEach(el=>{const v=data.spec[el.dataset.spec]?.[el.dataset.key];if(typeof v==='string'&&(el.tagName!=='SELECT'||Array.from(el.options).some(o=>o.value===v)))el.value=v});
+   applySnapshot(data);setOrigin({label:'本机草稿',title:'已读取保存的 3D 条件',desc:'当前数据来自这个浏览器中保存的草稿；设备规格和条件需依据其填写来源核对。'});
    setNote('已读取本机草稿，请核对当前条件及设备规格。');q('[data-message]').textContent='已读取当前浏览器中的 3D 草稿。';update();
   }catch(e){q('[data-message]').textContent='未找到可读取的 3D 草稿。'}});
   q('[data-export]').addEventListener('click',()=>{
@@ -150,13 +155,19 @@
    lines.push('提示：来源标注为虚构演示的数据不对应真实设备。数值核对不等于现场精度或有效率；实际需结合设备规格和样件验证。');
    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/plain;charset=utf-8'}));a.download='3D视觉方案初选清单.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);q('[data-message]').textContent='已生成 3D 方案初选清单。';
   });
-  q('[data-reset]').addEventListener('click',()=>{qa('[data-context]').forEach(el=>el.value='unknown');qa('[data-req]').forEach(el=>el.value='');qa('[data-spec]').forEach(el=>el.value=el.tagName==='SELECT'?'unknown':'');setNote('当前输入已清空；可以填写自己的条件，或恢复示例。');q('[data-message]').textContent='当前输入已清空；本机已保存的草稿未删除。';update()});
-  if(memoryDraft){
+  q('[data-reset]').addEventListener('click',()=>{qa('[data-context]').forEach(el=>el.value='unknown');qa('[data-req]').forEach(el=>el.value='');qa('[data-spec]').forEach(el=>el.value=el.tagName==='SELECT'?'unknown':'');setOrigin({label:'自行填写',title:'从空白条件开始',desc:'填写项目要求和实际设备规格；暂不确定的项目可以留空。'});setNote('当前输入已清空；可以填写自己的条件，或恢复示例。');q('[data-message]').textContent='当前输入已清空；本机已保存的草稿未删除。';update()});
+  q('[data-undo-transfer]').addEventListener('click',()=>{if(!transferBackup)return;const previous=transferBackup;transferBackup=null;applySnapshot(previous.draft);setOrigin(previous.origin||{label:'站内暂存',title:'已恢复带入前的条件',desc:'当前数据来自带入前的页面输入。'});setNote(previous.note||'已恢复带入前的条件。');q('[data-undo-transfer]').hidden=true;q('[data-message]').textContent='已恢复带入前的条件；本机草稿未改动。';update()});
+  if(incoming){
+   transferBackup=memoryDraft?{draft:memoryDraft,origin:memoryOrigin,note:memoryNote}:null;
+   applySnapshot(incoming);setOrigin({label:'已带入的案例示例',title:incoming.title,desc:incoming.note});setNote('已带入案例条件；可继续修改。已保存的本机草稿未改动。');
+  }else if(memoryDraft){
    qa('[data-req]').forEach(el=>{const v=memoryDraft.req[el.dataset.req];if(typeof v==='string')el.value=v});
    qa('[data-spec]').forEach(el=>{const v=memoryDraft.spec[el.dataset.spec]?.[el.dataset.key];if(typeof v==='string'&&(el.tagName!=='SELECT'||Array.from(el.options).some(o=>o.value===v)))el.value=v});
+   setOrigin(memoryOrigin||{label:'站内暂存',title:'已恢复站内暂存条件',desc:'请核对当前项目条件与设备规格。'});
    setNote(memoryDraft.context.task!==shared.task?'任务类型沿用上一页；其他条件为站内暂存内容，请核对是否适合当前任务。':(memoryNote||'已恢复站内暂存的条件，请核对。'));
   }else applyExample(true);
+  q('[data-undo-transfer]').hidden=!transferBackup;
   update();
  }
- root.VisionChoiceUI={nav,mount(target,mode){if(!target||!M)return;if(mode==='guide')guide(target);else if(mode==='3d')mount3d(target)}};
+ root.VisionChoiceUI={nav,mount(target,mode,incoming){if(!target||!M)return;if(mode==='guide')guide(target);else if(mode==='3d')mount3d(target,incoming)}};
 })(window);
