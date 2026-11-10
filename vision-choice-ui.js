@@ -13,7 +13,7 @@
  const num=v=>v===''?null:Number(v);
  const fmt=n=>!Number.isFinite(n)?'—':n!==0&&(Math.abs(n)<1e-4||Math.abs(n)>=1e9)?n.toExponential(4):Number(n.toFixed(4)).toString();
  const option=(list,value)=>list.map(([v,label])=>`<option value="${esc(v)}"${v===value?' selected':''}>${esc(label)}</option>`).join('');
- const nav=active=>`<nav class="choice-nav" aria-label="选型工具分类"><a href="#tools" ${active==='guide'?'aria-current="page"':''}><span>01</span> 先判断 2D / 3D</a><a href="#tools/2d" ${active==='2d'?'aria-current="page"':''}><span>02</span> 2D 成像选型</a><a href="#tools/3d" ${active==='3d'?'aria-current="page"':''}><span>03</span> 3D 方案初选</a></nav>`;
+ const nav=active=>`<nav class="choice-nav" aria-label="选型工具分类"><a href="#tools" ${active==='guide'?'aria-current="page"':''}><span>01</span> 先判断 2D / 3D</a><a href="#tools/2d" ${active==='2d'?'aria-current="page"':''}><span>02</span> 2D 成像选型</a><a href="#tools/3d" ${active==='3d'?'aria-current="page"':''}><span>03</span> 3D 方案初选</a><a href="#project-record"><span>04</span> 项目与样件记录</a></nav>`;
  function guide(target){
   const examples=[
    {id:'print',label:'字符 / 印刷检测',task:'appearance',height:'controlled'},
@@ -169,5 +169,5 @@
   q('[data-undo-transfer]').hidden=!transferBackup;
   update();
  }
- root.VisionChoiceUI={nav,mount(target,mode,incoming){if(!target||!M)return;if(mode==='guide')guide(target);else if(mode==='3d')mount3d(target,incoming)}};
+ root.VisionChoiceUI={nav,mount(target,mode,incoming){if(!target||!M)return;if(mode==='guide')guide(target);else if(mode==='3d')mount3d(target,incoming)},getDraft(){return memoryDraft?JSON.parse(JSON.stringify({...memoryDraft,origin:memoryOrigin})):null}};
 })(window);

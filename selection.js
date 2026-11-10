@@ -96,5 +96,5 @@ function mount(target,incoming){
   comparison=root.VisionSelectionCompare.mount(target.querySelector('#compare-root'),bridge);
   target.querySelector('[data-open-compare]').addEventListener('click',()=>target.querySelector('#selection-compare').scrollIntoView({behavior:'smooth',block:'start'}));target.addEventListener('input',remember);target.addEventListener('change',remember);update();remember();
 }
-root.VisionSelection={mount};
+root.VisionSelection={mount,getDraft(){return memorySelection?JSON.parse(JSON.stringify(memorySelection)):null}};
 })(window);
