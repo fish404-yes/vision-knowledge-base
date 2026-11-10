@@ -35,12 +35,13 @@
   <link rel="stylesheet" href="terminal-case.css?v=20261109c">
   <link rel="stylesheet" href="terminal-batch.css?v=20261109c">
   <link rel="stylesheet" href="field-cases.css?v=20261108">
+  <link rel="stylesheet" href="structure.css?v=20261110-simple">
   <script defer src="knowledge.js?v=thinlens-20261107"></script>
   <script defer src="knowledge-extra.js?v=scenarios-20261107"></script>
   <script defer src="estimate.js"></script>
-  <script defer src="selection.js?v=system-20261110-record"></script>
+  <script defer src="selection.js?v=system-20261110-simple"></script>
   <script defer src="vision-choice-model.js?v=20261109-example"></script>
-  <script defer src="vision-choice-ui.js?v=20261110-record"></script>
+  <script defer src="vision-choice-ui.js?v=20261110-simple"></script>
   <script defer src="models.js?v=thinlens-20261107"></script>
   <script defer src="image-lab-model.js?v=20261109m"></script>
   <script defer src="profile-model.js?v=20261108b"></script>
@@ -65,7 +66,7 @@
   <script defer src="bounding-box-model.js?v=20261109"></script>
   <script defer src="bounding-box-demo.js?v=20261109"></script>
   <script defer src="experiences.js?v=spatial-20261109e"></script>
-  <script defer src="interactive-index.js?v=20261108"></script>
+  <script defer src="interactive-index.js?v=20261110-simple"></script>
   <script defer src="project-models.js"></script>
   <script defer src="field-case-models.js?v=20261108"></script>
   <script defer src="projects.js?v=20261108b"></script>
@@ -78,7 +79,8 @@
   <script defer src="terminal-batch-model.js?v=20261109c"></script>
   <script defer src="terminal-batch.js?v=20261109d"></script>
   <script defer src="terminal-case.js?v=20261109f"></script>
-  <script defer src="practical-cases.js?v=20261110-record"></script>
+  <script defer src="practical-cases.js?v=20261110-simple"></script>
+  <script defer src="case-index.js?v=20261110-simple"></script>
   <script defer src="project-record-model.js?v=20261110"></script>
   <script defer src="project-record.js?v=20261110"></script>
   <script defer src="light-compare.js?v=20261108c"></script>
@@ -87,11 +89,11 @@
   <script defer src="issues-model.js?v=20261108"></script>
   <script defer src="issues-visuals.js?v=20261108"></script>
   <script defer src="issues.js?v=guided-20261108b"></script>
-  <script defer src="site-search.js?v=linked-20261110-record"></script>
+  <script defer src="site-search.js?v=linked-20261110-simple"></script>
   <script defer src="content-ui.js?v=20261108b"></script>
-  <script defer src="image-lab.js?v=20261109n"></script>
-  <script defer src="workspace-home.js?v=system-20261109a"></script>
-  <script defer src="app.js?v=linked-20261110-record"></script>
+  <script defer src="image-lab.js?v=20261110-simple"></script>
+  <script defer src="workspace-home.js?v=20261110-simple"></script>
+  <script defer src="app.js?v=20261110-simple"></script>
   <script defer src="visits.js?v=20261107"></script>
 </head>
 <body>
@@ -107,22 +109,15 @@
         <nav class="topnav" aria-label="主要导航">
           <a href="#home" data-nav="home"><span class="workspace-nav-icon" aria-hidden="true">◫</span>首页</a>
           <a href="#browse" data-nav="browse"><span class="workspace-nav-icon" aria-hidden="true">⌕</span>知识目录</a>
-          <a href="#projects" data-nav="projects"><span class="workspace-nav-icon" aria-hidden="true">⌗</span>2D 项目</a>
-          <a href="#cases" data-nav="cases"><span class="workspace-nav-icon" aria-hidden="true">▤</span>现场案例</a>
           <a href="#interactive" data-nav="interactive"><span class="workspace-nav-icon" aria-hidden="true">◉</span>互动图解</a>
-          <a href="#image-lab" data-nav="image-lab"><span class="workspace-nav-icon" aria-hidden="true">▧</span>图像实验区</a>
-          <a href="#tools" data-nav="tools"><span class="workspace-nav-icon" aria-hidden="true">⌁</span>选型估算</a>
-          <a href="#project-record" data-nav="record"><span class="workspace-nav-icon" aria-hidden="true">▧</span>项目记录</a>
+          <a href="#cases" data-nav="cases"><span class="workspace-nav-icon" aria-hidden="true">▤</span>应用案例</a>
+          <a href="#tools" data-nav="tools"><span class="workspace-nav-icon" aria-hidden="true">⌁</span>选型与工具</a>
           <a href="#issues" data-nav="issues"><span class="workspace-nav-icon" aria-hidden="true">✳</span>问题排查</a>
         </nav>
-        <p class="workspace-nav-label categories-label"><span>知识分类</span><span>INDEX</span></p>
-        <nav id="sidebar-categories" class="workspace-categories" aria-label="知识分类"></nav>
-        <div class="workspace-sidebar-note">
-          <span aria-hidden="true">✳</span>
-          <strong>遇到视觉问题？</strong>
-          <p>从现场现象开始逐项检查。</p>
-          <a href="#issues">查看问题排查 →</a>
-        </div>
+        <details class="workspace-category-details">
+          <summary>知识分类</summary>
+          <nav id="sidebar-categories" class="workspace-categories" aria-label="知识分类"></nav>
+        </details>
       </div>
     </aside>
     <div class="workspace-content">
@@ -138,7 +133,7 @@
       </header>
       <nav class="mobile-nav" id="mobile-nav" hidden aria-label="手机导航">
         <div class="mobile-nav-links">
-          <a href="#home" data-nav="home">首页</a><a href="#browse" data-nav="browse">知识目录</a><a href="#projects" data-nav="projects">2D 项目</a><a href="#cases" data-nav="cases">现场案例</a><a href="#interactive" data-nav="interactive">互动图解</a><a href="#image-lab" data-nav="image-lab">图像实验区</a><a href="#tools" data-nav="tools">选型估算</a><a href="#project-record" data-nav="record">项目记录</a><a href="#issues" data-nav="issues">问题排查</a>
+          <a href="#home" data-nav="home">首页</a><a href="#browse" data-nav="browse">知识目录</a><a href="#interactive" data-nav="interactive">互动图解</a><a href="#cases" data-nav="cases">应用案例</a><a href="#tools" data-nav="tools">选型与工具</a><a href="#issues" data-nav="issues">问题排查</a>
         </div>
         <form class="mobile-search" role="search" aria-label="手机端全站搜索"><input type="search" name="q" aria-label="搜索知识点" placeholder="搜索相机、光源、标定…"><button type="submit">搜索</button></form>
       </nav>

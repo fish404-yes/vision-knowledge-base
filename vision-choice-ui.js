@@ -13,7 +13,7 @@
  const num=v=>v===''?null:Number(v);
  const fmt=n=>!Number.isFinite(n)?'—':n!==0&&(Math.abs(n)<1e-4||Math.abs(n)>=1e9)?n.toExponential(4):Number(n.toFixed(4)).toString();
  const option=(list,value)=>list.map(([v,label])=>`<option value="${esc(v)}"${v===value?' selected':''}>${esc(label)}</option>`).join('');
- const nav=active=>`<nav class="choice-nav" aria-label="选型工具分类"><a href="#tools" ${active==='guide'?'aria-current="page"':''}><span>01</span> 先判断 2D / 3D</a><a href="#tools/2d" ${active==='2d'?'aria-current="page"':''}><span>02</span> 2D 成像选型</a><a href="#tools/3d" ${active==='3d'?'aria-current="page"':''}><span>03</span> 3D 方案初选</a><a href="#project-record"><span>04</span> 项目与样件记录</a></nav>`;
+ const nav=active=>`<nav class="choice-nav" aria-label="选型工具分类"><a href="#tools" ${active==='guide'?'aria-current="page"':''}><span>01</span> 先判断 2D / 3D</a><a href="#tools/2d" ${active==='2d'?'aria-current="page"':''}><span>02</span> 2D 成像选型</a><a href="#tools/3d" ${active==='3d'?'aria-current="page"':''}><span>03</span> 3D 方案初选</a>${active==='guide'?'':'<a href="#project-record"><span>04</span> 项目与样件记录</a>'}</nav>`;
  function guide(target){
   const examples=[
    {id:'print',label:'字符 / 印刷检测',task:'appearance',height:'controlled'},
@@ -27,7 +27,7 @@
    <div class="choice-principle"><article><b>2D</b><strong>图像里的信息</strong><span>颜色、字符、轮廓、平面位置</span></article><article><b>3D / 位移</b><strong>空间里的信息</strong><span>高度、截面、表面形状或姿态</span></article><article><b>组合</b><strong>两类信息都需要</strong><span>按工艺将 2D 与高度测量配合</span></article></div>
    <div class="choice-examples"><strong>试试常见任务</strong><div role="group" aria-label="2D 与 3D 场景示例">${examples.map(x=>`<button type="button" data-example="${x.id}">${x.label}</button>`).join('')}</div><p>示例只改变下方条件，最终仍需核对工件、节拍和拍样。</p></div>
    <div class="choice-guide-grid"><div class="choice-guide-fields"><label><span>项目需要得到什么？</span><select data-task>${option(taskOptions,shared.task)}</select><small>看的是任务要求，不是工件外形。</small></label><label><span>拍摄时工件高度和倾斜能控制吗？</span><select data-height>${option(heightOptions,shared.height)}</select><small>例如平面定位时，高度变化可能影响成像和抓取。</small></label></div><div class="choice-verdict" data-verdict aria-live="polite"></div></div>
-   <p class="choice-foot">判断只是初选，不替代成像、测量精度和现场验证。<a href="#article/3d-overview">查看 2D 与 3D 知识 →</a> · <a href="#demo/3d-compare">比较常见 3D 方法 →</a> · <a href="#cases">看三个选型案例 →</a></p></section>`;
+   <p class="choice-foot">判断只是初选，不替代成像、测量精度和现场验证。<a href="#article/3d-overview">查看 2D 与 3D 知识 →</a> · <a href="#demo/3d-compare">比较常见 3D 方法 →</a> · <a href="#cases/selection">看三个选型案例 →</a></p></section>`;
   const q=s=>target.querySelector(s);
   function update(){
    q('[data-task]').value=shared.task;q('[data-height]').value=shared.height;

@@ -3,7 +3,7 @@
  const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.VisionSiteSearch=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
  'use strict';
- const groups=[['articles','知识点'],['projects','2D 项目'],['cases','现场案例'],['demos','互动图解'],['tools','工具'],['issues','问题排查']];
+ const groups=[['articles','知识点'],['projects','2D 分步互动'],['cases','应用示例'],['demos','互动图解'],['tools','工具'],['issues','问题排查']];
  const topics=[
   {id:'selection',label:'成像系统选型',terms:['相机选型','镜头选型','硬件选型','系统选型'],members:['article:camera-selection','article:camera-sampling','article:camera-formats','article:lens-fov','article:light-selection','article:app-selection','demo:view','tool:selection','tool:compare']},
   {id:'choice3d',label:'2D 与 3D 方案初选',terms:['2d还是3d','2d与3d','3d选型','三维选型','线频','轮廓间距','三维相机'],members:['article:3d-overview','article:3d-laser','article:3d-pointcloud','demo:3d-compare','demo:laser-scan-cloud','tool:choice','tool:selection3d','tool:selection','tool:project-record','case:selection-planar-pick','case:selection-step-height','case:selection-bin-pick']},
