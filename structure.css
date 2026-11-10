@@ -9,6 +9,12 @@
 .home-workflows{display:grid;gap:8px}
 .home-workflows a{display:grid;grid-template-columns:1fr auto;gap:3px 10px;padding:13px;border:1px solid var(--work-border);border-radius:9px;background:var(--work-card-soft)}
 .home-workflows strong{font-size:13px;color:var(--work-strong)}.home-workflows small{font-size:11px;color:var(--work-sub);line-height:1.6}.home-workflows b{grid-column:2;grid-row:1/3;align-self:center;color:var(--work-accent)}
+.home-dashboard{grid-template-areas:"primary selection" "primary actions";grid-template-rows:auto 1fr}
+.home-primary{grid-area:primary}.home-rail{grid-area:actions}
+.home-selection-feature{grid-area:selection;min-height:205px;padding:24px}
+.home-selection-feature>strong{font-size:22px}.home-selection-feature>span:not(.home-tool-top){font-size:13px;line-height:1.75}
+.home-selection-feature:focus-visible{outline:3px solid #e6a462;outline-offset:3px}
+@media(max-width:1050px){.home-dashboard{grid-template-areas:"selection" "primary" "actions";grid-template-rows:auto}.home-rail{grid-template-columns:minmax(0,1fr)}}
 .catalog-overview{padding:23px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
 .catalog-overview-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:16px}.catalog-overview-head h2{margin:0;color:var(--ink);font-size:20px}.catalog-overview-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.catalog-overview-head a{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap}
 .catalog-overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.catalog-category{display:flex;align-items:center;gap:12px;padding:15px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}.catalog-category:hover,.case-category:hover,.case-topic-card:hover{border-color:var(--teal)}.catalog-category .icon{width:40px;height:40px;flex:none}.catalog-category .icon svg{width:22px;height:22px}.catalog-category-copy{min-width:0}.catalog-category-copy strong,.catalog-category-copy small{display:block}.catalog-category-copy strong{font-size:14px;color:var(--ink)}.catalog-category-copy small{margin-top:4px;font-size:11px;color:var(--muted);line-height:1.5}.catalog-category-count{margin-left:auto;color:var(--teal);font-size:11px;white-space:nowrap}

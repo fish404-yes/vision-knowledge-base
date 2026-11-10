@@ -11,11 +11,13 @@
    <section class="home-heading"><div><div class="home-kicker">机器视觉知识库</div><h1>从问题出发，查找视觉知识</h1><p>相机、镜头、光源、2D / 3D 和机器人应用，都可以在这里查找。</p></div></section>
    <form class="home-search" role="search" aria-label="首页全站搜索"><label for="home-query" aria-label="搜索知识点"><span aria-hidden="true">⌕</span></label><input id="home-query" type="search" placeholder="搜索相机、镜头、光源、标定…"><button type="submit">查找</button></form>
    <div class="home-quick"><span>常用查找</span><a href="#article/camera-selection">相机选型 ↗</a><a href="#article/lens-fov">镜头焦距 ↗</a><a href="#article/light-selection">光源选型 ↗</a><a href="#article/2d-mark">双 Mark ↗</a><a href="#tools">2D / 3D 如何选 ↗</a></div>
-   <div class="home-dashboard"><div class="home-primary">
+   <div class="home-dashboard">
+    <a class="home-tool-card home-selection-feature" href="#tools"><span class="home-tool-top"><span>方案与选型工具</span>${icon('target')}</span><strong>选择方案与工具</strong><span>从 2D / 3D 方案判断到相机、镜头与光源初选，也可使用图像实验和项目记录。</span><b>打开选型与工具　↗</b></a>
+    <div class="home-primary">
     <section class="home-panel home-categories"><div class="home-panel-head"><div><h2>按主题查找知识</h2></div><a href="#browse">知识目录 ↗</a></div><div class="home-category-grid">${categories}</div><div class="home-panel-footer">${data.categories.length} 个知识主题 · ${data.articles.length} 篇知识点</div></section>
     <section class="home-panel home-project"><div class="home-panel-head"><div><h2>示例：双 Mark 定位</h2></div><a href="#cases/position">更多定位案例 ↗</a></div><a class="home-project-feature" href="#project/single"><span class="home-project-art">${markArt()}</span><span class="home-project-copy"><small>分步互动 · 模拟示例</small><strong>${esc(project.title)}</strong><span>从拍照位姿、图像点到基座坐标，按步骤查看定位过程。</span><b>进入案例　→</b></span></a></section>
    </div><aside class="home-rail" aria-label="常用工具与问题">
-    <section class="home-panel"><div class="home-panel-head"><div><h2>你想做什么？</h2></div></div><div class="home-workflows"><a href="#interactive"><strong>动手理解原理</strong><small>2D、3D、成像与标定图解</small><b>↗</b></a><a href="#cases"><strong>查看应用案例</strong><small>定位抓取、测量和选型示例</small><b>↗</b></a><a href="#tools"><strong>选择方案与工具</strong><small>2D / 3D 初选、图像实验和项目记录</small><b>↗</b></a><a href="#issues"><strong>排查现场问题</strong><small>从模糊、偏差和通信现象开始</small><b>↗</b></a></div></section>
+    <section class="home-panel"><div class="home-panel-head"><div><h2>你想做什么？</h2></div></div><div class="home-workflows"><a href="#interactive"><strong>动手理解原理</strong><small>2D、3D、成像与标定图解</small><b>↗</b></a><a href="#cases"><strong>查看应用案例</strong><small>定位抓取、测量和选型示例</small><b>↗</b></a><a href="#issues"><strong>排查现场问题</strong><small>从模糊、偏差和通信现象开始</small><b>↗</b></a></div></section>
    </aside></div>
   </div>`;
   target.querySelector('.home-search').addEventListener('submit',event=>{event.preventDefault();goSearch(target.querySelector('#home-query').value)});
